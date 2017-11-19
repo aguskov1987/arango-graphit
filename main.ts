@@ -22,13 +22,31 @@ function createWindow() {
     win.webContents.openDevTools();
   }
 
-  let menuTemplate = [
+  let menuTemplate : any = [
     {
       label: "File",
       submenu: [
-        {label: "Open File", accelerator: "Shift+CmdOrCtrl+H", click() {}},
-        {label: "Open Project", accelerator: "Shift+CmdOrCtrl+J", click() {}} 
-    ]}
+        {label: "Open", click() {}},
+        {label: "Open Recent", click() {}},
+        {type: 'separator'},
+        {label: "Save", accelerator: "CommandOrControl+S", click() {}},
+        {label: "Save All", accelerator: "CommandOrControl+Shift+S", click() {}},
+        {type: 'separator'},
+        {label: "Exit", click() {}} 
+    ]},
+    {
+      label: 'Edit',
+      submenu: [
+        {role: 'undo'},
+        {role: 'redo'},
+        {type: 'separator'},
+        {role: 'cut'},
+        {role: 'copy'},
+        {role: 'paste'},
+        {role: 'delete'},
+        {role: 'selectall'}
+      ]
+    }
   ];
 
   const menu = Menu.buildFromTemplate(menuTemplate);
