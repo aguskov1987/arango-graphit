@@ -1,0 +1,16 @@
+<div class="item"
+  *ngFor="let item of asset;"
+  [ngClass]="['item__type--' + item.type, 'is-object-' + isObject(item), 'is-opened-' + item.isOpened]">
+
+  <div class="item__title" (click)="clickHandle(item)">
+    <span class="fa fa-plus lead-in" *ngIf="isObject(item) && !item.isOpened"></span>
+    <span class="fa fa-minus lead-in" *ngIf="isObject(item) && item.isOpened"></span>
+    <span [ngClass]="{'not-object-value': !isObject(item)}" class="lead-in">{{item.key}} :</span>
+    <span class="item__value" *ngIf="!item.isOpened" [innerHTML]="item.title"></span>
+  </div>
+
+  <div class="inner-item" *ngIf="isObject(item)" [hidden]="!item.isOpened">
+    <object-viewer [json]="item.value" [expanded]="expanded"></object-viewer>
+  </div>
+
+</div>

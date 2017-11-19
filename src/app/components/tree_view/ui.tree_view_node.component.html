@@ -1,0 +1,14 @@
+<div class="node" (click)="nodeClicked()" (contextmenu)="contextMenuClicked()" [ngClass]="{'node-selected' : selected}">
+
+  <span *ngIf="!item.terminalNode && item.collapsed" class="fa fa-angle-right" (click)="openOrCollapse()"></span>
+  <span *ngIf="!item.terminalNode && !item.collapsed" class="fa fa-angle-down" (click)="openOrCollapse()"></span>
+  <i class="node-type fa fa-fw" [ngClass] ="[item.icon]" [ngStyle]="{'color': item.color}"></i>{{item.displayName}}
+
+</div>
+<div class="sub-nodes" *ngIf="!item.terminalNode && !item.collapsed">
+  <tree-view-node (clicked)="passClickAlong($event)"
+                  (contextmenu)="passContextAlong($event)"
+                  *ngFor ="let sub of item.subNodes"
+                  [item]="sub" [parent]="instance">
+  </tree-view-node>
+</div>

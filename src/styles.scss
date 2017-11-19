@@ -1,7 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
-html, body {
-  margin: 0;
-  padding: 0;
-
+html {
   height: 100%;
+}
+body {
+  margin: 0;
+  height: 100%;
+  font-weight: 200;
+  font-family: 'Fira Sans script=all rev=2"', sans-serif;
+}
+
+.gutter-vertical {
+  height: 5px !important;
+  background-color: #4a4a4a;
+  cursor: n-resize;
+}
+
+.gutter-horizontal {
+  width: 10px !important;
+  background-color: #4a4a4a;
+  cursor: e-resize;
+}
+
+.ui-inputtext {
+  background-color: #3D3D3D !important;
+  color: white !important;
+  font-size: smaller !important;
+}
+
+.ui-radiobutton-label {
+  font-size: smaller !important;
+  color: white !important;
+}
+
+.ui-state-active {
+  background-color: #6550a4 !important;
 }

@@ -1,0 +1,12 @@
+<div #hints class="codeHinter" [ngStyle]="{'top': position[0], 'left': position[1]}">
+  <div
+    [ngClass]="{'option': !opt.selected, 'selectedOption': opt.selected}"
+    *ngFor="let opt of options" (mouseover)="onOptionHover(opt)" (click)="onOptionClick()">
+    <span *ngIf="opt.type === 0" class="fa fa-key fa-fw"></span>
+    <span *ngIf="opt.type === 1" class="fa fa-code fa-fw"></span>
+    <span *ngIf="opt.type === 2" class="fa fa-cube fa-fw"></span>
+    <span *ngIf="opt.type === 3" class="fa fa-file fa-fw"></span>
+    <span *ngIf="opt.type === 4" class="fa fa-code-fork fa-fw"></span>
+    {{opt.name}}
+  </div>
+</div>

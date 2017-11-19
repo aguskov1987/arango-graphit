@@ -1,0 +1,22 @@
+div.codeHinter {
+  position: fixed;
+  width: 300px;
+  border: 1px solid #aba6a5;
+  max-height: 100px;
+  overflow: auto;
+  cursor: pointer;
+}
+
+.option {
+  font-size: small;
+  font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+  color: white;
+  background-color: #202020;
+}
+
+.selectedOption {
+  font-size: small;
+  color: white;
+  font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+  background-color: dimgrey;
+}

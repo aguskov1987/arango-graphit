@@ -1,0 +1,59 @@
+.item {
+  font-size: small;
+  padding: 1px;
+  margin: 1px 1px 1px 12px;
+}
+
+.inner-item {
+  margin-left: 10px;
+  transition: transform 0.1s ease-in;
+}
+
+.item__title {
+  white-space: nowrap;
+}
+
+.item__value {
+  color: #fefefe;
+}
+
+.not-object-value {
+  color: white;
+  padding-left: 1em;
+}
+
+.item__type--array .item__value {
+  color: #999;
+}
+
+.item__type--object .item__value {
+  color: #999;
+}
+
+.item__type--string .item__value {
+  color: #57bc43;
+}
+
+.item__type--number .item__value {
+  color: #ff8694;
+}
+
+.item__type--boolean .item__value {
+  color: #ffa854;
+}
+
+.item__type--null .item__value {
+  color: #999;
+}
+
+.item__type--undefined .item__value {
+  color: #999;
+}
+
+.is-object-true > .item__title{
+  cursor: pointer;
+}
+
+.lead-in {
+  color: white;
+}

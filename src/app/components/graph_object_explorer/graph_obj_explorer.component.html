@@ -1,0 +1,30 @@
+<div class="params" [hidden]="!showParameters">
+  <div class="header">Document ID</div>
+  <input id="nodeId" type="text" size="30" pInputText [(ngModel)]="nodeId">
+
+  <div class="spacer"></div>
+
+  <div class="header">Edge Direction</div>
+  <div class="ui-g" style="width:250px;margin-bottom:10px">
+    <div class="ui-g-12"><p-radioButton name="group2" value="INBOUND" label="INBOUND" [(ngModel)]="edgeDir" inputId="preopt1"></p-radioButton></div>
+    <div class="ui-g-12"><p-radioButton name="group2" value="OUTBOUND" label="OUTBOUND" [(ngModel)]="edgeDir" inputId="preopt2"></p-radioButton></div>
+    <div class="ui-g-12"><p-radioButton name="group2" value="ANY" label="ANY" [(ngModel)]="edgeDir" inputId="preopt3"></p-radioButton></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="header">Maximum Depth</div>
+  <p-spinner size="5" [(ngModel)]="depth"></p-spinner>
+
+  <div class="spacer"></div>
+
+  <div class="header">Document Label</div>
+  <input id="label" type="text" size="30" pInputText [(ngModel)]="label">
+
+  <div class="spacer"></div>
+
+  <button (click)="submit()">GO</button>
+</div>
+<div class="d3-container" [hidden]="showParameters">
+  <graph-viewer></graph-viewer>
+</div>

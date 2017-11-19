@@ -1,0 +1,14 @@
+  <div id ="aqlCodeEditor" >
+    <ace-editor #editor
+                [(text)]="text"
+                [mode]="'aql'"
+                [durationBeforeCallback]="500"
+                (textChanged)="onTextChanged($event)"
+                style="height:100%;">
+    </ace-editor>
+  </div>
+  <div id="aqlResultPanel">
+    <object-viewer [json]="queryResult"></object-viewer> 
+  </div>
+
+<code-hinter #hinter (optionSelected)="hinterOptionSelected($event)"></code-hinter>

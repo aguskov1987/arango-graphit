@@ -209,6 +209,9 @@ module.exports = {
     "alias": { // WORKAROUND See. angular-cli/issues/5433
       "environments": isProd ? path.resolve(__dirname, 'src/environments/index.prod.ts') : path.resolve(__dirname, 'src/environments/index.ts')
     },
+    alias: {
+      linkedlist: 'linkedlist/lib/linkedlist.js',
+    },
     "modules": [
       "./node_modules"
     ]
