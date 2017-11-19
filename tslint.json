@@ -1,0 +1,37 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "no-empty": false,
+    "typedef-whitespace":
+    [
+      true,
+      {
+        "call-signature": "space",
+        "index-signature": "space",
+        "parameter": "space",
+        "property-declaration": "space",
+        "variable-declaration": "space"
+      },
+      {
+        "call-signature": "onespace",
+        "index-signature": "onespace",
+        "parameter": "onespace",
+        "property-declaration": "onespace",
+        "variable-declaration": "onespace"
+      }
+    ],
+    "one-line": [true],
+    "object-literal-sort-keys": false,
+    "no-string-literal": false,
+    "no-bitwise": false,
+    "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
+    "no-trailing-whitespace": false,
+    "no-console": false,
+    "forin": false,
+    "max-classes-per-file": false,
+    "ordered-imports": false,
+    "max-line-length": false,
+    "no-reference": false
+  },
+  "rulesDirectory": []
+}
