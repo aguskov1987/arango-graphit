@@ -1,4 +1,4 @@
-<div class="node" (click)="nodeClicked()" (contextmenu)="contextMenuClicked()" [ngClass]="{'node-selected' : selected}">
+<div class="node" (click)="nodeClicked()" (contextmenu)="contextMenuClicked($event)" [ngClass]="{'node-selected' : selected}">
 
   <span *ngIf="!item.terminalNode && item.collapsed" class="fa fa-angle-right" (click)="openOrCollapse()"></span>
   <span *ngIf="!item.terminalNode && !item.collapsed" class="fa fa-angle-down" (click)="openOrCollapse()"></span>
