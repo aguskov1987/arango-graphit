@@ -34,7 +34,7 @@ The project takes inspirations from a number of existing software such as:
 - The application should start in hot reload mode. Once you make any changes to the Angular app, electron will reload to reflect the changes. Keep in mind that the once you make any changes to the main process code, electron will not hot reload and you will have to manually restart step 2 and 4
 
 ### Known issues with the build process
-- After installing the dependencies and try to run the app, you might run into the following error - "list" argument must be an Array of Buffers. The error is coming from node_modules/buffer.index.js, in the *concat* function even though the passed **buff** object is a *Buffer*:
+- After installing the dependencies and try to run the app, you might run into the following error - "list" argument must be an Array of Buffers. The error is coming from node_modules/buffer.index.js, in the *concat* function even though the passed **buf** object is a *Buffer*:
 ```javascript
     if (!Buffer.isBuffer(buf)) {
       throw new TypeError('"list" argument must be an Array of Buffers')

@@ -14,7 +14,7 @@ function createWindow() {
   const size = screen.getPrimaryDisplay().workAreaSize;
 
   // Create the browser window.
-  win = new BrowserWindow({x: 0, y: 0, width: size.width, height: size.height});
+  win = new BrowserWindow({x: 0, y: 0, width: size.width, height: size.height, icon: path.join(__dirname + "/assets/Images/icon_64x64.png")});
   // and load the index.html of the app.
   win.loadURL('file://' + __dirname + '/index.html');
   // Open the DevTools.

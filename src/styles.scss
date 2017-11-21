@@ -1,4 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+$gutter-color: #4a4a4a;
+
+
 html {
   height: 100%;
 }
@@ -11,16 +13,17 @@ body {
 
 .gutter-vertical {
   height: 5px !important;
-  background-color: #4a4a4a;
+  background-color: $gutter-color;
   cursor: n-resize;
 }
 
 .gutter-horizontal {
   width: 10px !important;
-  background-color: #4a4a4a;
+  background-color: $gutter-color;
   cursor: e-resize;
 }
 
+// Input styles
 .ui-inputtext {
   background-color: #3D3D3D !important;
   color: white !important;
