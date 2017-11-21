@@ -1,3 +1,4 @@
+import {ElectronService} from '../../providers/electron.service';
 /**
  * Created by Andrey on 10/28/2017.
  */
@@ -11,13 +12,19 @@ import { TreeViewNodeComponent } from "./ui.tree_view_node.component";
  */
 @Component({
   moduleId: module.id,
-  selector: "tree-view",
+  selector: "tree-view", 
   templateUrl: "ui.tree_view.component.html",
 })
 export class TreeViewComponent implements OnInit {
   @Input() public root : ITreeViewItem = null;
   @ViewChild(TreeViewNodeComponent) public treeView : TreeViewNodeComponent;
   @Output() public nodeRightClicked = new EventEmitter();
+
+  private electronService : ElectronService;
+
+  constructor(es : ElectronService) {
+    this.electronService = es;
+  }
 
   public ngOnInit() {
   }
@@ -30,6 +37,6 @@ export class TreeViewComponent implements OnInit {
   public contextmenu(node : TreeViewNodeComponent) {
     this.treeView.deselectAll();
     this.treeView.selectNode(node.item);
-    this.nodeRightClicked.emit(node);
+    this.electronService.ipcRenderer.send("graphRightClicked", node.item);
   }
 }

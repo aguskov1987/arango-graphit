@@ -32,6 +32,7 @@ export class AqlEditorComponent implements OnInit {
   private currentToken : any = null;
   private editor : any;
   private hinterOn : boolean = false;
+  private hinterJustClicked : boolean = false;
   private renderer : Renderer2;
   private arangoService : ArangoService;
 
@@ -111,6 +112,13 @@ export class AqlEditorComponent implements OnInit {
   }
 
   public onTextChanged() {
+    if (isDevMode) {
+      console.log("onTextChanged triggered");
+    }
+    if (this.hinterJustClicked) {
+      this.hinterJustClicked = false;
+      return;
+    }
     let position = this.editor.getCursorPosition();
     let token = this.editor.session.getTokenAt(position.row, position.column);
     this.currentToken = token;
@@ -118,9 +126,13 @@ export class AqlEditorComponent implements OnInit {
     if (token !== null && token.value !== "" && token.value !== " "
       && token.value !== "{" && token.value !== "}" && token.value !== "("
       && token.value !== ")" && token.value !== "[" && token.value !== "]") {
-      console.log(token.value);
+        if (isDevMode) {
+          console.log("current aql editor token - " + token.value);
+        }
       this.codeHinter.updateOptionsList(token.value);
-      this.showHinter();
+      if (this.codeHinter.optionsAvailable && !this.codeHinter.isOneOptionAndSameAsToken(token.value)) {
+        this.showHinter();
+      }
     }
     else {
       if (this.hinterOn) {
@@ -132,6 +144,10 @@ export class AqlEditorComponent implements OnInit {
   }
 
   public hinterOptionSelected(word : string) {
+    this.hinterJustClicked = true;
+    if (isDevMode) {
+      console.log("hinter option selected");
+    }
     let row = this.editor.getSelectionRange().start.row;
     let range = this.editor.getSelectionRange().clone();
     range.start.row = row;

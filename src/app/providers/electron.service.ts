@@ -8,8 +8,8 @@ import * as fs from 'fs'
 @Injectable()
 export class ElectronService {
 
-  ipcRenderer: typeof ipcRenderer;
-  childProcess: typeof childProcess;
+  public ipcRenderer: typeof ipcRenderer;
+  public childProcess: typeof childProcess;
 
   constructor() {
     // Conditional imports

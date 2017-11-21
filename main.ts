@@ -1,6 +1,7 @@
-import { app, BrowserWindow, screen, Menu } from "electron";
+import { app, BrowserWindow, screen, Menu, ipcMain, Point } from "electron";
 import * as path from 'path';
 
+import {ContextMenus} from "./context_menus";
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -17,6 +18,14 @@ function createWindow() {
   win = new BrowserWindow({x: 0, y: 0, width: size.width, height: size.height, icon: path.join(__dirname + "/assets/Images/icon_64x64.png")});
   // and load the index.html of the app.
   win.loadURL('file://' + __dirname + '/index.html');
+
+  // Register context menus:
+  let contMenus = new ContextMenus(win);
+  ipcMain.on("graphRightClicked", (event, args) => {
+    let mousePosition : Point = screen.getCursorScreenPoint();;
+    contMenus.openGraphContextMenu(mousePosition.x, mousePosition.y - 45, args)
+  })
+
   // Open the DevTools.
   if (serve) {
     win.webContents.openDevTools();

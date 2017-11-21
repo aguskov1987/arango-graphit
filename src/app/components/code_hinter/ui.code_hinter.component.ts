@@ -25,6 +25,7 @@ class Option {
 })
 export class CodeHinterComponent implements OnInit {
   public position : [string, string] = ["-500px", "-500px"];
+  public optionsAvailable : boolean = false;
   @Output() public optionSelected = new EventEmitter();
 
   private keywordOptions : Option[] = [];
@@ -67,6 +68,19 @@ export class CodeHinterComponent implements OnInit {
     if (this.options.length > 0) {
       this.options.forEach((o) => o.selected = false);
       this.options[0].selected = true;
+      this.optionsAvailable = true;
+    }
+    else {
+      this.optionsAvailable = false;
+    }
+  }
+
+  public isOneOptionAndSameAsToken(token : string) : boolean {
+    if (this.options.length === 1 && this.options[0].name === token) {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 

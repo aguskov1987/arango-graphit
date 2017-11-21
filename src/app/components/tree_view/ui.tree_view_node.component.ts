@@ -56,7 +56,7 @@ export class TreeViewNodeComponent implements OnInit {
     this.clicked.emit(this.item);
   }
 
-  public contextMenuClicked() {
+  public contextMenuClicked(event) {
     this.contextmenu.emit(this);
   }
 
