@@ -67,7 +67,7 @@ export class TreeViewNodeComponent implements OnInit {
     this.clicked.emit(args);
   }
 
-  public passContextAlong(args: any) {
+  public passContextAlong(args: RightClickEventArgs) {
     this.contextmenu.emit(args);
   }
 }

@@ -4,8 +4,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 export enum TabType {
-  AQL,
-  Graph,
+  DbAQL,
+  GraphAQL,
+  GraphExplorer,
   Settings,
   AddCollection,
   AddRelation,

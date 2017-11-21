@@ -16,8 +16,8 @@ import { TabType } from "./ui.tab.component";
 })
 export class TabContentComponent implements OnInit {
   @Input() public id : number = 0;
-  @Input() public type : TabType = TabType.AQL;
-  @Input() public active : boolean = true;
+  @Input() public type : TabType;
+  @Input() public active : boolean = false;
 
   constructor() {
   }

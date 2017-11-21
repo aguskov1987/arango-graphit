@@ -1,13 +1,13 @@
-/**
- * Created by Andrey on 11/5/2017.
- */
 import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChildren } from "@angular/core";
+
 import { TabType, TabComponent } from "./ui.tab.component";
 import { TabContentComponent } from "./ui.tabContent.component";
+import { ElectronService } from "app/providers/electron.service";
 
 export interface ITabItem {
   id : number;
   type : TabType;
+  active: boolean;
   database : string;
   graph : string;
 }
@@ -32,33 +32,35 @@ export interface ITabItem {
     }
   `],
 })
-export class TabsComponent implements OnInit, AfterViewInit {
+export class TabsComponent implements OnInit {
   @Input() public items : ITabItem[] = [];
 
   @ViewChildren(TabComponent) public tabs : QueryList<TabComponent>;
   @ViewChildren(TabContentComponent) public windows : QueryList<TabContentComponent>;
 
-  constructor() {
-    this.items.push({id: 0, type: TabType.AQL, graph: "", database: ""});
-    this.items.push({id: 1, type: TabType.Settings, graph: "", database: ""});
-    this.items.push({id: 2, type: TabType.Graph, graph: "", database: ""});
+  private electronService: ElectronService;
+
+  constructor(es: ElectronService) {
+    this.electronService = es;
+    this.electronService.ipcRenderer.on("open_db_query_msg", (event, args) => {
+      console.log(args);
+      this.addNewTab(TabType.DbAQL, args.params.dbName, args.params.graphName);
+    });
   }
 
   public ngOnInit() {
-
   }
 
-  public ngAfterViewInit() : void {
-    let t = this.tabs.first;
-    t.active = true;
+  public addNewTab(type: TabType, database: string, graph: string) {
+    this.items.forEach((item) => item.active = false); 
+
+    let nextTabId = this.items.length < 1 ? 0 : this.items[this.items.length - 1].id + 1;
+    this.items.push({id: nextTabId, type: type, graph: graph, database: database, active: true});
   }
 
   public tabClicked(id : number) {
-    this.tabs.forEach((tab) => {
-      tab.active = tab.id === id;
-    });
-    this.windows.forEach((win) => {
-      win.active = win.id === id;
+    this.items.forEach((item) => {
+      item.active = item.id === id;
     });
   }
 
@@ -94,11 +96,16 @@ export class TabsComponent implements OnInit, AfterViewInit {
         counter++;
       });
 
-      // Reset the ids of the tabs too
+      // Reset the ids of the tabs and windows too
     counter = 0;
     this.tabs.forEach((t) => {
         t.id = counter;
         counter++;
       });
+    counter = 0;
+    this.windows.forEach((w) => {
+      w.id = counter;
+      counter++;
+    })
   }
 }

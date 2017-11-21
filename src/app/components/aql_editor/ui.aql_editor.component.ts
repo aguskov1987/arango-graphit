@@ -1,7 +1,7 @@
 /**
  * Created by Andrey on 10/4/2017.
  */
-import { Component, OnInit, Renderer2, ViewChild, isDevMode, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, isDevMode, HostListener, Input } from '@angular/core';
 import { AceEditorComponent } from "ng2-ace-editor";
 import { CodeHinterComponent } from "../code_hinter/ui.code_hinter.component";
 import { Split } from "../../../assets/split/split";
@@ -21,7 +21,8 @@ import { StoreUtils } from "../../common/store";
       }
     `],
 })
-export class AqlEditorComponent implements OnInit {
+export class AqlEditorComponent implements OnInit, AfterViewInit {
+  @Input() public id: number;
   @ViewChild("editor") public editorComponent : AceEditorComponent;
   @ViewChild("hinter") public codeHinter : CodeHinterComponent;
 
@@ -42,8 +43,6 @@ export class AqlEditorComponent implements OnInit {
   }
 
   public ngOnInit() : void {
-    Split(["#aqlCodeEditor", "#aqlResultPanel"], {direction : "vertical", sizes: [50, 50]});
-
     this.editorComponent.setOptions({fontSize: "12pt"});
     this.editor = this.editorComponent.getEditor();
     this.editor.getSelection().on("changeCursor", () => {
@@ -64,6 +63,10 @@ export class AqlEditorComponent implements OnInit {
     StoreUtils.globalEventEmitter.on(StoreUtils.comment_code_clicked, () => {
       this.editor.toggleCommentLines();
     });
+  }
+
+  ngAfterViewInit(): void {
+    Split(["#aqlCodeEditor" + this.id, "#aqlResultPanel" + this.id], {direction : "vertical", sizes: [50, 50]});
   }
 
   public captureCursorPosition() : [string, string] {

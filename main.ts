@@ -24,6 +24,9 @@ function createWindow() {
   ipcMain.on("graphRightClicked", (event, args) => {
     contMenus.openGraphContextMenu(args.x, args.y, args.argument)
   })
+  ipcMain.on("dbRightClicked", (event, args) => {
+    contMenus.openDbContextMenu(args.x, args.y, args.argument)
+  })
 
   // Open the DevTools.
   if (serve) {

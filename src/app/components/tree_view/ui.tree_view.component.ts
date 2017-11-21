@@ -5,6 +5,7 @@ import { ElectronService } from "../../providers/electron.service";
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { ITreeViewItem, TreeViewItemType } from "./ui.tree_view_item.interface";
 import { TreeViewNodeComponent, RightClickEventArgs } from "./ui.tree_view_node.component";
+import { NewTabArgs } from "app/common/types/new_tab_args";
 
 /***
  * Top-level component for Tree View. To use, insert a root object into the component.
@@ -41,6 +42,13 @@ export class TreeViewComponent implements OnInit {
       if (args.component.item.objType === TreeViewItemType.Graph) {
         this.electronService.ipcRenderer
           .send("graphRightClicked", { argument: args.component.item, x: args.mouseX, y: args.mouseY });
+      }
+      else if (args.component.item.objType === TreeViewItemType.Database) {
+        let params: NewTabArgs = new NewTabArgs();
+        params.dbName = args.component.item.displayName;
+        params.graphName = "";
+        this.electronService.ipcRenderer
+          .send("dbRightClicked", { argument: params, x: args.mouseX, y: args.mouseY });
       }
     }
   }
