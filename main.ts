@@ -22,8 +22,7 @@ function createWindow() {
   // Register context menus:
   let contMenus = new ContextMenus(win);
   ipcMain.on("graphRightClicked", (event, args) => {
-    let mousePosition : Point = screen.getCursorScreenPoint();;
-    contMenus.openGraphContextMenu(mousePosition.x, mousePosition.y - 45, args)
+    contMenus.openGraphContextMenu(args.x, args.y, args.argument)
   })
 
   // Open the DevTools.

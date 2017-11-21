@@ -4,43 +4,29 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { ITreeViewItem } from "./ui.tree_view_item.interface";
 
+export class RightClickEventArgs {
+  component: TreeViewNodeComponent;
+  mouseX: number;
+  mouseY: number;
+}
+
 @Component({
   moduleId: module.id,
   selector: "tree-view-node",
   templateUrl: "ui.tree_view_node.component.html",
-  styles: [`
-    .node {
-      color: lightgrey;
-      cursor: pointer;
-      padding-top: 3px;
-      font-size: smaller;
-    }
-
-    .node-selected {
-      background-color: #343434;
-    }
-    
-    .node-type {
-      display: inline;
-      padding-right: 5px;
-    }
-
-    .sub-nodes {
-      margin-left: 1em;
-    }
-  `],
+  styleUrls: ["ui.tree_view_node.component.scss"]
 })
 export class TreeViewNodeComponent implements OnInit {
 
-  @Input() public item : ITreeViewItem = null;
+  @Input() public item: ITreeViewItem = null;
   @Output() public clicked = new EventEmitter();
   @Output() public contextmenu = new EventEmitter();
 
-  public selected : boolean = false;
+  public selected: boolean = false;
   public instance = this;
-  @Input() public parent : TreeViewNodeComponent = null;
+  @Input() public parent: TreeViewNodeComponent = null;
 
-  @ViewChildren(TreeViewNodeComponent) private subNodes : QueryList<TreeViewNodeComponent>;
+  @ViewChildren(TreeViewNodeComponent) private subNodes: QueryList<TreeViewNodeComponent>;
 
   constructor() {
   }
@@ -57,7 +43,8 @@ export class TreeViewNodeComponent implements OnInit {
   }
 
   public contextMenuClicked(event) {
-    this.contextmenu.emit(this);
+    let args: RightClickEventArgs = { component: this, mouseX: event.clientX, mouseY: event.clientY };
+    this.contextmenu.emit(args);
   }
 
   public deselectAll() {
@@ -67,7 +54,7 @@ export class TreeViewNodeComponent implements OnInit {
     }
   }
 
-  public selectNode(node : ITreeViewItem) {
+  public selectNode(node: ITreeViewItem) {
     if (this.item === node) {
       this.selected = true;
     }
@@ -76,11 +63,11 @@ export class TreeViewNodeComponent implements OnInit {
     }
   }
 
-  public passClickAlong(node : TreeViewNodeComponent) {
-    this.clicked.emit(node);
+  public passClickAlong(args: ITreeViewItem) {
+    this.clicked.emit(args);
   }
 
-  public passContextAlong(node : TreeViewNodeComponent) {
-    this.contextmenu.emit(node);
+  public passContextAlong(args: any) {
+    this.contextmenu.emit(args);
   }
 }

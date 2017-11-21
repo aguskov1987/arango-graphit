@@ -4,7 +4,7 @@ import { Split } from "../assets/split/split";
 import { AppState, ArangoType, StoreUtils } from "./common/store";
 import { ArangoDb } from "./common/types/arango_database.type";
 import { ArangoGraph } from "./common/types/arango_graph.type";
-import { ITreeViewItem } from "./components/tree_view/ui.tree_view_item.interface";
+import { ITreeViewItem, TreeViewItemType } from "./components/tree_view/ui.tree_view_item.interface";
 import { TreeViewNodeComponent } from "./components/tree_view/ui.tree_view_node.component";
 
 @Component({
@@ -22,6 +22,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
     this.tree = {
       obj : "server",
+      objType: TreeViewItemType.Server,
       terminalNode: false,
       collapsed: false,
       subNodes: [],
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
         // Add database to the SERVER tree
         let db = {
           obj : name,
+          objType: TreeViewItemType.Database,
           terminalNode: false,
           collapsed: false,
           subNodes: [],
@@ -73,6 +75,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
             for (let g of graphs) {
               let graphRow = {
                 obj : g,
+                objType: TreeViewItemType.Graph,
                 terminalNode: false,
                 collapsed: false,
                 subNodes: [],
@@ -94,6 +97,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
               graphDocCollections.forEach((doc) => {
                 let docRow = {
                   obj : doc,
+                  objType: TreeViewItemType.GraphVertexCollection,
                   terminalNode: true,
                   collapsed: false,
                   subNodes: [],
@@ -107,6 +111,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
               g.edgeDefinitions.forEach((ed) => {
                 let relRow = { 
                   obj : ed,
+                  objType: TreeViewItemType.GraphRelCollection,
                   terminalNode: true,
                   collapsed: false,
                   subNodes: [],

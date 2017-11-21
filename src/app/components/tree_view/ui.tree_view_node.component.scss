@@ -1,0 +1,19 @@
+.node {
+    color: lightgrey;
+    cursor: pointer;
+    padding-top: 3px;
+    font-size: smaller;
+  }
+
+  .node-selected {
+    background-color: #343434;
+  }
+  
+  .node-type {
+    display: inline;
+    padding-right: 5px;
+  }
+
+  .sub-nodes {
+    margin-left: 1em;
+  }
