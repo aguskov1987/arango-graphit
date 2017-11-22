@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ToolbarComponent } from 'app/components/toolbar/ui.toolbar.component';
 import {TabsComponent} from './components/tabs/ui.tabs.component';
 import {TabContentComponent} from './components/tabs/ui.tabContent.component';
 import {TabComponent} from './components/tabs/ui.tab.component';
@@ -30,6 +31,7 @@ import { GraphObjExplorerComponent } from 'app/components/graph_object_explorer/
 @NgModule({
   declarations: [
     AppComponent,
+    ToolbarComponent,
     AqlEditorComponent,
     GraphViewerComponent,
     ObjectViewerComponent,

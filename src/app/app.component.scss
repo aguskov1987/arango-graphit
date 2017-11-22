@@ -12,18 +12,6 @@ $background-grey: #323232;
     background-color: #282828;
   }
   
-  .toolstrip {
-    height: 25px;
-    right: 0;
-    left: 0;
-    padding-left: 10px;
-    background-color: $main-grey;
-    border-bottom: solid 1px #282828;
-    border-top: solid 1px #555555;
-    color: lightgrey;
-    display: flex;
-  }
-  
   .tree {
     padding: 0;
     overflow: auto;
@@ -49,31 +37,5 @@ $background-grey: #323232;
     flex-flow: column;
     background-color: $background-grey;
     padding: 0 !important;
-  }
-  
-  img {
-    image-rendering: -webkit-optimize-contrast;
-  }
-  
-  .toolstrip-button {
-    padding-top: 4px;
-    width: 25px;
-    height: 21px;
-    text-align: center;
-    -webkit-user-select: none;
-  }
-  
-  .toolstrip-button:hover {
-    background-color: #464949;
-  }
-  
-  .toolstrip-button:active {
-    background-color: #767773;
-  }
-  
-  .menu-divider {
-    width: 2px;
-    background-color: #545454;
-    margin: 2px 3px;
   }
   

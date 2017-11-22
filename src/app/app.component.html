@@ -1,45 +1,7 @@
 <div class="divider"></div>
-<div class="toolstrip">
-  <div class="toolstrip-button" title="Connect to Server">
-    <img src="../assets/Images/server-network.png" width="16" height="16">
-  </div>
 
-  <div class="menu-divider"></div>
+<toolbar></toolbar>
 
-  <div class="toolstrip-button" title="Open File">
-    <img src="../assets/Images/folder-open.png" width="17" height="13">
-  </div>
-  <div class="toolstrip-button" title="Save">
-    <img src="../assets/Images/content-save.png" width="15" height="15">
-  </div>
-  <div class="toolstrip-button" title="Save All">
-    <img src="../assets/Images/content-save-all.png" width="17" height="17">
-  </div>
-
-  <div class="menu-divider"></div>
-
-  <div class="toolstrip-button" title="Cut">
-    <img src="../assets/Images/content-cut.png" width="17" height="17">
-  </div>
-  <div class="toolstrip-button" title="Copy">
-    <img src="../assets/Images/content-copy.png" width="17" height="17">
-  </div>
-  <div class="toolstrip-button" title="Paste">
-    <img src="../assets/Images/content-paste.png" width="17" height="17">
-  </div>
-
-  <div class="menu-divider"></div>
-
-  <div class="toolstrip-button" title="Run Query" (click)="buttonPressed('run_query')">
-    <img src="../assets/Images/play.png" width="17" height="17">
-  </div>
-  <div class="toolstrip-button" title="Table View">
-    <img src="../assets/Images/table.png" width="17" height="17">
-  </div>
-  <div class="toolstrip-button" title="JSON View">
-    <img src="../assets/Images/code-braces.png" width="17" height="17">
-  </div>
-</div>
 <div class=" graphix-app ui-g">
   <div class="tree ui-g-2" id="arangoTree">
     <tree-view [root]="tree" (nodeRightClicked)="onNodeRightClick($event)"></tree-view>
