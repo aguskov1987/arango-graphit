@@ -68,10 +68,11 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     Split(["#aqlCodeEditor" + this.id, "#aqlResultPanel" + this.id], {direction : "vertical", sizes: [50, 50]});
   }
-
+// .parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
   public captureCursorPosition() : [string, string] {
     let bodyRect = document.body.getBoundingClientRect();
-    let cursor = document.getElementsByClassName("ace_cursor")[0];
+    let cursor = document.getElementById("aqlCodeEditor" + this.id).getElementsByClassName("ace_cursor")[0];
+
     let cursorRect = cursor.getBoundingClientRect();
     let topPosition = cursorRect.top - bodyRect.top;
     let leftPosition = cursorRect.left - bodyRect.left;

@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChildren } from "@angular/core";
+import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChildren, NgZone } from "@angular/core";
 
 import { TabType, TabComponent } from "./ui.tab.component";
 import { TabContentComponent } from "./ui.tabContent.component";
 import { ElectronService } from "app/providers/electron.service";
+import { Command } from "app/common/types/command.type";
 
 export interface ITabItem {
   id : number;
@@ -39,12 +40,21 @@ export class TabsComponent implements OnInit {
   @ViewChildren(TabContentComponent) public windows : QueryList<TabContentComponent>;
 
   private electronService: ElectronService;
+  private zone: NgZone;
 
-  constructor(es: ElectronService) {
+  constructor(es: ElectronService, z: NgZone) {
     this.electronService = es;
+    this.zone = z;
+
     this.electronService.ipcRenderer.on("open_db_query_msg", (event, args) => {
-      console.log(args);
-      this.addNewTab(TabType.DbAQL, args.params.dbName, args.params.graphName);
+      let command = args as Command; 
+      this.addNewTab(TabType.DbAQL, command.database, command.graph);
+      this.zone.run(() => {console.log("Db AQL Tab added")});
+    });
+    this.electronService.ipcRenderer.on("open_graph_query_msg", (event, args) => {
+      let command = args as Command;
+      this.addNewTab(TabType.GraphAQL, command.database, command.graph);
+      this.zone.run(() => {console.log("Graph AQL Tab added")});
     });
   }
 
@@ -52,9 +62,9 @@ export class TabsComponent implements OnInit {
   }
 
   public addNewTab(type: TabType, database: string, graph: string) {
-    this.items.forEach((item) => item.active = false); 
+    this.items.forEach((item) => item.active = false);
 
-    let nextTabId = this.items.length < 1 ? 0 : this.items[this.items.length - 1].id + 1;
+    let nextTabId = this.items.length < 1 ? 0 : this.items.length;
     this.items.push({id: nextTabId, type: type, graph: graph, database: database, active: true});
   }
 
@@ -65,47 +75,25 @@ export class TabsComponent implements OnInit {
   }
 
   public tabCloseClicked(id : number) {
-    let activeIndex : number;
+    console.log(this.items, id);
     // deactivate all tabs
-    this.tabs.forEach((tab) => {
-      tab.active = false;
+    this.items.forEach((item) => item.active = false);
 
-      // Record the current tab to be selected
-      if (id === 0) {
-        activeIndex = 1;
-      }
-      else {
-        activeIndex = id - 1;
-      }
-    });
+    if (id === 0 && this.items.length > 1) {
+      this.items[1].active = true;
+    }
+    else if (id > 0 && this.items.length > 1) {
+      this.items[id - 1].active = true;
+    }
 
-      // Remove the item
+    // Remove the item
     this.items = this.items.filter((item) => item.id !== id);
-    let counter : number = 0;
 
-      // Activate the tab and also reset the ids of the items
+    // Reset the ids of the tabs and windows too
+    let counter: number = 0;
     this.items.forEach((item) => {
-        if (item.id === activeIndex) {
-          this.tabs.forEach((t) => {
-            if (t.id === item.id) {
-              t.active = true;
-            }
-          });
-        }
         item.id = counter;
         counter++;
       });
-
-      // Reset the ids of the tabs and windows too
-    counter = 0;
-    this.tabs.forEach((t) => {
-        t.id = counter;
-        counter++;
-      });
-    counter = 0;
-    this.windows.forEach((w) => {
-      w.id = counter;
-      counter++;
-    })
   }
 }

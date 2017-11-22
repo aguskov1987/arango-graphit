@@ -4,8 +4,9 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { ITreeViewItem } from "./ui.tree_view_item.interface";
 
-export class RightClickEventArgs {
-  component: TreeViewNodeComponent;
+export class TreeRightClickEventArgs {
+  item: ITreeViewItem;
+  parent: ITreeViewItem;
   mouseX: number;
   mouseY: number;
 }
@@ -43,7 +44,12 @@ export class TreeViewNodeComponent implements OnInit {
   }
 
   public contextMenuClicked(event) {
-    let args: RightClickEventArgs = { component: this, mouseX: event.clientX, mouseY: event.clientY };
+    let args: TreeRightClickEventArgs = {
+      item: this.item,
+      parent: this.parent.item,
+      mouseX: event.clientX,
+      mouseY: event.clientY
+    };
     this.contextmenu.emit(args);
   }
 
@@ -67,7 +73,7 @@ export class TreeViewNodeComponent implements OnInit {
     this.clicked.emit(args);
   }
 
-  public passContextAlong(args: RightClickEventArgs) {
+  public passContextAlong(args: TreeRightClickEventArgs) {
     this.contextmenu.emit(args);
   }
 }

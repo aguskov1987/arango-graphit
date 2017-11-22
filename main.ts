@@ -21,11 +21,12 @@ function createWindow() {
 
   // Register context menus:
   let contMenus = new ContextMenus(win);
+  // args is of type Command (common -> command.type.ts)
   ipcMain.on("graphRightClicked", (event, args) => {
-    contMenus.openGraphContextMenu(args.x, args.y, args.argument)
+    contMenus.openGraphContextMenu(args.x, args.y, args.command)
   })
   ipcMain.on("dbRightClicked", (event, args) => {
-    contMenus.openDbContextMenu(args.x, args.y, args.argument)
+    contMenus.openDbContextMenu(args.x, args.y, args.command)
   })
 
   // Open the DevTools.

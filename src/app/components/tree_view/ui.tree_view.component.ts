@@ -1,11 +1,8 @@
 import { ElectronService } from "../../providers/electron.service";
-/**
- * Created by Andrey on 10/28/2017.
- */
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { ITreeViewItem, TreeViewItemType } from "./ui.tree_view_item.interface";
-import { TreeViewNodeComponent, RightClickEventArgs } from "./ui.tree_view_node.component";
-import { NewTabArgs } from "app/common/types/new_tab_args";
+import { TreeViewNodeComponent, TreeRightClickEventArgs } from "./ui.tree_view_node.component";
+import { Command, CommandType } from "app/common/types/command.type";
 
 /***
  * Top-level component for Tree View. To use, insert a root object into the component.
@@ -35,20 +32,27 @@ export class TreeViewComponent implements OnInit {
     this.treeView.selectNode(node);
   }
 
-  public contextmenu(args: RightClickEventArgs) {
+  public contextmenu(args: TreeRightClickEventArgs) {
     this.treeView.deselectAll();
-    if (args.component != null) {
-      this.treeView.selectNode(args.component.item);
-      if (args.component.item.objType === TreeViewItemType.Graph) {
+
+    if (args.item != null) {
+      this.treeView.selectNode(args.item);
+
+      if (args.item.objType === TreeViewItemType.Graph) {
+        let command: Command = new Command();
+        command.commandType = CommandType.OpenNewGraphAqlTab;
+        command.graph = args.item.objName;
+        command.database = args.parent.objName;
         this.electronService.ipcRenderer
-          .send("graphRightClicked", { argument: args.component.item, x: args.mouseX, y: args.mouseY });
+          .send("graphRightClicked", { command: command, x: args.mouseX, y: args.mouseY });
       }
-      else if (args.component.item.objType === TreeViewItemType.Database) {
-        let params: NewTabArgs = new NewTabArgs();
-        params.dbName = args.component.item.displayName;
-        params.graphName = "";
+      else if (args.item.objType === TreeViewItemType.Database) {
+        let command: Command = new Command();
+        command.commandType = CommandType.OpenNewDbAqlTab;
+        command.database = args.item.objName;
+        command.graph = "";
         this.electronService.ipcRenderer
-          .send("dbRightClicked", { argument: params, x: args.mouseX, y: args.mouseY });
+          .send("dbRightClicked", { command: command, x: args.mouseX, y: args.mouseY });
       }
     }
   }
