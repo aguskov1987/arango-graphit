@@ -18,18 +18,21 @@ export class ContextMenus {
         }
         ));
         this.graphMenu.append(new MenuItem({
+            enabled: false,
             label: "Open Object Explorer", click: () => {
                 this.window.webContents.send("open_obj_explorer_msg",  this.command);
             }
         }
         ));
         this.graphMenu.append(new MenuItem({
+            enabled: false,
             label: "Add Vertex Collection", click: () => {
                 this.window.webContents.send("add_graph_vertex_collection_msg", this.command);
             }
         }
         ));
         this.graphMenu.append(new MenuItem({
+            enabled: false,
             label: "Add Relation Collection", click: () => {
                 this.window.webContents.send("add_graph_relation_collection_msg", this.command);
             }
@@ -44,18 +47,21 @@ export class ContextMenus {
         }
         ));
         this.dbMenu.append(new MenuItem({
+            enabled: false,
             label: "Add Graph", click: () => {
                 this.window.webContents.send("add_graph_msg", this.command);
             }
         }
         ));
         this.dbMenu.append(new MenuItem({
+            enabled: false,
             label: "Add Document Collection", click: () => {
                 this.window.webContents.send("add_db_document_collection", this.command);
             }
         }
         ));
         this.dbMenu.append(new MenuItem({
+            enabled: false,
             label: "Add Relation Collection", click: () => {
                 this.window.webContents.send("add_db_relation_collection", this.command );
             }
