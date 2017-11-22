@@ -21,7 +21,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     this.service = as;
 
     this.tree = {
-      obj : "server",
+      objName : "server",
       objType: TreeViewItemType.Server,
       terminalNode: false,
       collapsed: false,
@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
       for (let name of names) {
         // Add database to the SERVER tree
         let db = {
-          obj : name,
+          objName : name,
           objType: TreeViewItemType.Database,
           terminalNode: false,
           collapsed: false,
@@ -74,7 +74,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
           if (graphs.length && graphs.length > 0) {
             for (let g of graphs) {
               let graphRow = {
-                obj : g,
+                Name : g._key,
                 objType: TreeViewItemType.Graph,
                 terminalNode: false,
                 collapsed: false,
@@ -96,7 +96,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
               graphDocCollections.forEach((doc) => {
                 let docRow = {
-                  obj : doc,
+                  objName : doc,
                   objType: TreeViewItemType.GraphVertexCollection,
                   terminalNode: true,
                   collapsed: false,
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
               g.edgeDefinitions.forEach((ed) => {
                 let relRow = { 
-                  obj : ed,
+                  objName : ed.collection,
                   objType: TreeViewItemType.GraphRelCollection,
                   terminalNode: true,
                   collapsed: false,
@@ -162,12 +162,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   public onNodeRightClick(node : TreeViewNodeComponent) {
     if (node != null && node.item != null) {
-      if (node.item.obj.edgeDefinitions != null) {
-        if (node.parent != null) {
-          StoreUtils.currentDatabase = StoreUtils.databases.find((d) => d.name === node.parent.item.obj);
-        }
-
-        StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === node.item.obj._key);
+      if (node.item.objType === TreeViewItemType.Graph && node.parent != null) {
+        StoreUtils.currentDatabase = StoreUtils.databases.find((d) => d.name === node.parent.item.objName);
+        StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === node.item.objName);
       }
     }
   }

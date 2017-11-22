@@ -1,7 +1,7 @@
 <div class="tab" [ngClass]="{'tab-active': active}" (click)="tabClicked()">
-  <img *ngIf="tabType === 0" src="../../../assets/Images/console-line.png" width="17" height="17">
-  <img *ngIf="tabType === 1" src="../../../assets/Images/share-variant.png" width="17" height="17">
-  <img *ngIf="tabType === 2" src="../../../assets/Images/settings.png" width="17" height="17">
+  <img *ngIf="tabType === 0 || tabType === 1" src="../../../assets/Images/console-line.png" width="17" height="17">
+  <img *ngIf="tabType === 2" src="../../../assets/Images/share-variant.png" width="17" height="17">
+  <img *ngIf="tabType === 3" src="../../../assets/Images/settings.png" width="17" height="17">
   {{title}}
   <div class="close"><i class="fa fa-close" (click)="tabCloseClicked()"></i></div>
 </div>

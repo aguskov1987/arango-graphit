@@ -8,9 +8,8 @@ export enum TreeViewItemType {
   GraphRelCollection
 }
 
-
 export interface ITreeViewItem {
-  obj: any;
+  objName: string;
   objType: TreeViewItemType;
   displayName: string;
   icon: string;
