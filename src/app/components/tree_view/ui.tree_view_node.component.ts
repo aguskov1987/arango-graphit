@@ -46,7 +46,7 @@ export class TreeViewNodeComponent implements OnInit {
   public contextMenuClicked(event) {
     let args: TreeRightClickEventArgs = {
       item: this.item,
-      parent: this.parent.item,
+      parent: this.parent != null ? this.parent.item : null,
       mouseX: event.clientX,
       mouseY: event.clientY
     };

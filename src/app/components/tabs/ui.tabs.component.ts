@@ -4,6 +4,7 @@ import { TabType, TabComponent } from "./ui.tab.component";
 import { TabContentComponent } from "./ui.tabContent.component";
 import { ElectronService } from "app/providers/electron.service";
 import { Command } from "app/common/types/command.type";
+import { StoreUtils } from "app/common/store";
 
 export interface ITabItem {
   id : number;
@@ -66,11 +67,19 @@ export class TabsComponent implements OnInit {
 
     let nextTabId = this.items.length < 1 ? 0 : this.items.length;
     this.items.push({id: nextTabId, type: type, graph: graph, database: database, active: true});
+
+    // Set the names of the current database and graphs
+    StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === database);
+    StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === graph);
   }
 
   public tabClicked(id : number) {
     this.items.forEach((item) => {
       item.active = item.id === id;
+      if (item.active) {
+        StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === item.database);
+        StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === item.graph);
+      }
     });
   }
 

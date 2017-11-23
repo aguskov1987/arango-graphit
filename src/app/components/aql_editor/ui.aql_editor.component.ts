@@ -23,6 +23,7 @@ import { StoreUtils } from "../../common/store";
 })
 export class AqlEditorComponent implements OnInit, AfterViewInit {
   @Input() public id: number;
+  @Input() public active: boolean = false;
   @ViewChild("editor") public editorComponent : AceEditorComponent;
   @ViewChild("hinter") public codeHinter : CodeHinterComponent;
 
@@ -51,6 +52,9 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
     });
 
     StoreUtils.globalEventEmitter.on(StoreUtils.query_run_clicked, () => {
+      if (!this.active) {
+        return;
+      }
       this.arangoService.executeAqlQuery(this.text).then((cursor) => {
         cursor.all().then((items) => {
           this.queryResult = items;
@@ -164,7 +168,7 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
 
   @HostListener("keyup", ["$event"])
   public handleKeyboardEvent(kbdEvent : KeyboardEvent) {
-    if (kbdEvent.code === "F4") {
+    if (kbdEvent.code === "F5") {
       this.arangoService.executeAqlQuery(this.text).then((cursor) => {
         cursor.all().then((items) => {
           this.queryResult = items;

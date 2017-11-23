@@ -1,9 +1,12 @@
-import { app, BrowserWindow, screen, Menu, ipcMain, Point } from "electron";
+import { app, BrowserWindow, screen, Menu, ipcMain, Point, dialog } from "electron";
 import * as path from 'path';
-
 import {ContextMenus} from "./context_menus";
 
-let win, serve;
+// user preferences and other data persistence
+const Store = require("electron-store");
+const store = new Store();
+
+let win: BrowserWindow, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
@@ -19,7 +22,7 @@ function createWindow() {
   // and load the index.html of the app.
   win.loadURL('file://' + __dirname + '/index.html');
 
-  // Register context menus:
+  // Register context menus
   let contMenus = new ContextMenus(win);
   // args is of type Command (common -> command.type.ts)
   ipcMain.on("graphRightClicked", (event, args) => {
@@ -30,8 +33,9 @@ function createWindow() {
   })
 
   // Open the DevTools.
+  // Comment this one out if using VS Code debugging
   if (serve) {
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
   }
 
   let menuTemplate : any = [
@@ -41,10 +45,12 @@ function createWindow() {
         {label: "Open", click() {}},
         {label: "Open Recent", click() {}},
         {type: 'separator'},
-        {label: "Save", accelerator: "CommandOrControl+S", click() {}},
+        {label: "Save", accelerator: "CommandOrControl+S", click() {
+          dialog.showSaveDialog(win, {})
+        }},
         {label: "Save All", accelerator: "CommandOrControl+Shift+S", click() {}},
         {type: 'separator'},
-        {label: "Exit", click() {}} 
+        {role: 'close'} 
     ]},
     {
       label: 'Edit',
@@ -66,32 +72,23 @@ function createWindow() {
 
   // Emitted when the window is closed.
   win.on('closed', () => {
-    // Dereference the window object, usually you would store window
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
+    store.set("window_maximized", win.isMaximized());
+    store.set("window_height", win.getSize()[1]);
+    store.set("window_width", win.getSize()[0]);
     win = null;
   });
 }
 
 try {
-
-  // This method will be called when Electron has finished
-  // initialization and is ready to create browser windows.
-  // Some APIs can only be used after this event occurs.
   app.on('ready', createWindow);
 
-  // Quit when all windows are closed.
   app.on('window-all-closed', () => {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
       app.quit();
     }
   });
 
   app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     if (win === null) {
       createWindow();
     }
