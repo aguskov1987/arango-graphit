@@ -31,7 +31,7 @@ function createWindow() {
 
   // Open the DevTools.
   if (serve) {
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
   }
 
   let menuTemplate : any = [

@@ -1,18 +1,19 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed, async } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { ToolbarComponent } from 'app/components/toolbar/ui.toolbar.component';
+import { TreeViewComponent } from 'app/components/tree_view/ui.tree_view.component';
 import { ElectronService } from 'app/providers/electron.service';
+import { ArangoService } from 'app/providers/arango.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent, ToolbarComponent, TreeViewComponent
       ],
-      providers : [
-        ElectronService
-      ],
-      imports: [RouterTestingModule]
+      providers: [ElectronService, ArangoService],
+      schemas:[NO_ERRORS_SCHEMA]
     }).compileComponents();
   }));
 

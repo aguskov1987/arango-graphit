@@ -147,19 +147,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
     this.appState = StoreUtils.app_state;
   }
 
-  public buttonPressed(button : string) {
-    switch (button) {
-      case "run_query":
-        StoreUtils.globalEventEmitter.emit(StoreUtils.query_run_clicked);
-        break;
-      case "comment_code":
-        StoreUtils.globalEventEmitter.emit(StoreUtils.comment_code_clicked);
-        break;
-      default:
-        return;
-    }
-  }
-
   public onNodeRightClick(node : TreeViewNodeComponent) {
     if (node != null && node.item != null) {
       if (node.item.objType === TreeViewItemType.Graph && node.parent != null) {

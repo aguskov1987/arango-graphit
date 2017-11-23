@@ -17,9 +17,9 @@ import { AqlEditorComponent } from "app/components/aql_editor/ui.aql_editor.comp
 })
 export class TabContentComponent implements OnInit, OnChanges {
 
-  @Input() public id : number = 0;
-  @Input() public type : TabType;
-  @Input() public active : boolean = false;
+  @Input() public id: number = 0;
+  @Input() public type: TabType;
+  @Input() public active: boolean = false;
   @ViewChild(AqlEditorComponent) private aqlEditor: AqlEditorComponent;
 
   constructor() {
@@ -30,7 +30,7 @@ export class TabContentComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges): void {
     // activate the editor if the user switches to the tab
-    if (changes.active != null && changes.active.previousValue === false && changes.active.currentValue === true  && this.aqlEditor != null) {
+    if (changes.active != null && changes.active.previousValue === false && changes.active.currentValue === true && this.aqlEditor != null) {
       this.aqlEditor.focusOnEditor();
     }
     // activate the editor if the user opens a new tab
