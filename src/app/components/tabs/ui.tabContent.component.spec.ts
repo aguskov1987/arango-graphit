@@ -22,7 +22,7 @@ describe("Tab content component", () => {
     
     it("should check that the component is created", () => {
         const fixture = TestBed.createComponent(TabContentComponent);
-        const app = fixture.debugElement.componentInstance;
-        expect(app).toBeTruthy();
+        const component = fixture.debugElement.componentInstance;
+        expect(component).toBeTruthy();
     });
 });
