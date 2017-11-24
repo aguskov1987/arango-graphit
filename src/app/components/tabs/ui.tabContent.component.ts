@@ -1,6 +1,3 @@
-/**
- * Created by Andrey on 11/5/2017.
- */
 import { Component, Input, OnInit, ViewChild, OnChanges, SimpleChanges } from "@angular/core";
 import { TabType } from "./ui.tab.component";
 import { AqlEditorComponent } from "app/components/aql_editor/ui.aql_editor.component";

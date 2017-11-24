@@ -84,11 +84,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
                 color: "#359680",
               };
               db.subNodes.push(graphRow);
-
               let graphDocCollections = new Set();
-              for (let ed of g.edgeDefinitions){
+              for (let ed of g.edgeDefinitions) {
                 graphDocCollections.add(ed.from[0]);
                 graphDocCollections.add(ed.to[0]);
+                graphDocCollections.add(ed.from[1]);
+                graphDocCollections.add(ed.to[1]);
               }
               for (let c of g.orphanCollections) {
                 graphDocCollections.add(c);
