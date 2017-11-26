@@ -57,6 +57,11 @@ export class TabsComponent implements OnInit {
       this.addNewTab(TabType.GraphAQL, command.database, command.graph);
       this.zone.run(() => {console.log("Graph AQL Tab added")});
     });
+    this.electronService.ipcRenderer.on("open_obj_explorer_msg", (event, args) => {
+      let command = args as Command;
+      this.addNewTab(TabType.GraphExplorer, command.database, command.graph);
+      this.zone.run(() => {console.log("Graph Explorer Tab added")});
+    });
   }
 
   public ngOnInit() {

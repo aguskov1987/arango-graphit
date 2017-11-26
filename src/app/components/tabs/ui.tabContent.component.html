@@ -1,4 +1,4 @@
 <div class="content" [hidden]="!active">
   <aql-editor *ngIf="type === 0 || type === 1" [id]="id" [active]="active"></aql-editor>
-  <graph-obj-explorer *ngIf="type === 2"></graph-obj-explorer>
+  <graph-obj-explorer *ngIf="type === 2" [id]="id"></graph-obj-explorer>
 </div>

@@ -1,3 +1,4 @@
+// region Imports
 import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, Renderer2 } from '@angular/core';
 import { TabContentComponent } from 'app/components/tabs/ui.tabContent.component';
@@ -8,6 +9,7 @@ import { ArangoService } from 'app/providers/arango.service';
 import { D3Service } from 'd3-ng2-service';
 import { TabType } from 'app/components/tabs/ui.tab.component';
 import { AceEditorComponent } from 'ng2-ace-editor/src/component';
+// endregion
 
 describe("Tab content component", () => {
     // Good idea to place the fixture and the component into global variables so each test has access to them

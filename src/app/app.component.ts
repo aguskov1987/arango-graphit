@@ -75,6 +75,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
             for (let g of graphs) {
               let graphRow = {
                 Name : g._key,
+                objName: g._key,
                 objType: TreeViewItemType.Graph,
                 terminalNode: false,
                 collapsed: false,

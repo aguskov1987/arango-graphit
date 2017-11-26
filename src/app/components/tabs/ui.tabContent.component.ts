@@ -9,6 +9,7 @@ import { AqlEditorComponent } from "app/components/aql_editor/ui.aql_editor.comp
   styles: [`
     .content {
       height: 100%;
+      background-color: #2b2b2b;
     }
   `],
 })

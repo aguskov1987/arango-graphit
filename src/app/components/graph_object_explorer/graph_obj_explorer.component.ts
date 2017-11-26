@@ -1,7 +1,7 @@
 /**
  * Created by Andrey on 11/12/2017.
  */
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, Input } from "@angular/core";
 import { GraphViewerComponent } from "../graph_viewer/ui.graph_viewer.component";
 
 @Component({
@@ -31,6 +31,7 @@ import { GraphViewerComponent } from "../graph_viewer/ui.graph_viewer.component"
   `],
 })
 export class GraphObjExplorerComponent implements OnInit {
+  @Input() id: number = 0;
   public showParameters : boolean = true;
   public nodeId : string = "";
   public edgeDir : string = "ANY";
@@ -47,5 +48,6 @@ export class GraphObjExplorerComponent implements OnInit {
 
   public submit() {
     this.graphViewer.showGraph(this.nodeId, this.edgeDir, this.depth, this.label);
+    this.showParameters = false;
   }
 }

@@ -18,7 +18,6 @@ export class ContextMenus {
         }
         ));
         this.graphMenu.append(new MenuItem({
-            enabled: false,
             label: "Open Object Explorer", click: () => {
                 this.window.webContents.send("open_obj_explorer_msg",  this.command);
             }
@@ -70,6 +69,7 @@ export class ContextMenus {
     }
 
     public openGraphContextMenu(x: number, y: number, command: any) {
+        console.log(command);
         this.command = command;
         this.graphMenu.popup(this.window, { x: x, y: y });
     }

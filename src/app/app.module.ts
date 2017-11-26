@@ -21,7 +21,6 @@ import {GraphViewerComponent} from './components/graph_viewer/ui.graph_viewer.co
 import {SharedModule, RadioButtonModule, SpinnerModule, InputTextModule, DataTableModule} from 'primeng/primeng';
 import {AceEditorModule} from 'ng2-ace-editor';
 import {ArangoService} from './providers/arango.service';
-import {D3Service} from 'd3-ng2-service';
 
 import { AppComponent } from './app.component';
 
@@ -56,7 +55,7 @@ import { GraphObjExplorerComponent } from 'app/components/graph_object_explorer/
     RadioButtonModule,
     SharedModule,
   ],
-  providers: [ElectronService, D3Service, ArangoService],
+  providers: [ElectronService, ArangoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
