@@ -75,7 +75,9 @@ export class TabsComponent implements OnInit {
 
     // Set the names of the current database and graphs
     StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === database);
-    StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === graph);
+    if (StoreUtils.currentDatabase != null) {
+      StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === graph);      
+    }
   }
 
   public tabClicked(id : number) {

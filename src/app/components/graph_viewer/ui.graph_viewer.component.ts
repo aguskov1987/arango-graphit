@@ -31,7 +31,6 @@ export class GraphViewerComponent implements OnInit {
   }
 
   public showGraph(nodeId: string, dir: string, depth: number, label: string) {
-
     let docsCall = this.arangoServer.loadObjectGraphNodes(nodeId, dir, depth);
     let relsCall = this.arangoServer.loadObjectGraphRels(nodeId, dir, depth);
     let rootCall = this.arangoServer.loadDocumentById(nodeId);

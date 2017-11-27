@@ -6,7 +6,6 @@ import { AqlEditorComponent } from 'app/components/aql_editor/ui.aql_editor.comp
 import { GraphObjExplorerComponent } from 'app/components/graph_object_explorer/graph_obj_explorer.component';
 import { GraphViewerComponent } from 'app/components/graph_viewer/ui.graph_viewer.component';
 import { ArangoService } from 'app/providers/arango.service';
-import { D3Service } from 'd3-ng2-service';
 import { TabType } from 'app/components/tabs/ui.tab.component';
 import { AceEditorComponent } from 'ng2-ace-editor/src/component';
 // endregion
@@ -21,7 +20,7 @@ describe("Tab content component", () => {
         TestBed.configureTestingModule({
             declarations: [TabContentComponent, AqlEditorComponent, GraphObjExplorerComponent, GraphViewerComponent, AceEditorComponent],
             schemas: [NO_ERRORS_SCHEMA],
-            providers: [ArangoService, D3Service, Renderer2]
+            providers: [ArangoService, Renderer2]
         }).compileComponents;
     }));
     
