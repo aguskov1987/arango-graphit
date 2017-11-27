@@ -46,11 +46,77 @@ describe('Tabs Component', () => {
 
     it('should create the first tab and mark it active', () => {
         component.addNewTab(TabType.DbAQL, "db", "grf");
+
         expect(component.items).not.toBeNull;
         expect(component.items.length).toEqual(1);
         expect(component.items[0].active).toBeTruthy();
         expect(component.items[0].id).toEqual(0);
         expect(component.items[0].database).toEqual("db");
         expect(component.items[0].graph).toEqual("grf");
+    });
+
+    it('should add the second tab, mark it active and mark the first one inactive', () => {
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+
+        expect(component.items).not.toBeNull;
+        expect(component.items.length).toEqual(2);
+        expect(component.items[0].active).toBeFalsy();
+        expect(component.items[1].active).toBeTruthy();
+        expect(component.items[0].id).toEqual(0);
+        expect(component.items[1].id).toEqual(1);
+    });
+
+    it('should activate a tab when clicked', () => {
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+
+        expect(component.items[0].active).toBeFalsy();
+        expect(component.items[1].active).toBeTruthy();
+
+        component.tabClicked(0);
+
+        expect(component.items[0].active).toBeTruthy();
+        expect(component.items[1].active).toBeFalsy();
+    });
+
+    it('should close the last of 4 tabs and mark the 3rd one as active', () => {
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+
+        expect(component.items[3].active).toBeTruthy();
+
+        component.tabCloseClicked(3);
+
+        expect(component.items[2].active).toBeTruthy();
+    });
+
+    it('should close the first of 4 tabs and mark the 2nd once as active', () => {
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.tabClicked(0);
+
+        expect(component.items[0].active).toBeTruthy();
+
+        component.tabCloseClicked(0);
+
+        expect(component.items[0].active).toBeTruthy();
+    });
+
+    it('should re-order tabs after one of the tabs is closed', () => {
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.addNewTab(TabType.DbAQL, "db", "grf");
+        component.tabCloseClicked(1);
+
+        expect(component.items.length).toEqual(3);
+        expect(component.items[0].id).toEqual(0);
+        expect(component.items[1].id).toEqual(1);
+        expect(component.items[2].id).toEqual(2);
     });
 });

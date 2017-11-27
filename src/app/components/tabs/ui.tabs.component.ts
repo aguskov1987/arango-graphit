@@ -85,7 +85,9 @@ export class TabsComponent implements OnInit {
       item.active = item.id === id;
       if (item.active) {
         StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === item.database);
-        StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === item.graph);
+        if (StoreUtils.currentDatabase != null) {
+          StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === item.graph);          
+        }
       }
     });
   }

@@ -4,7 +4,6 @@
 import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, isDevMode, HostListener, Input } from '@angular/core';
 import { AceEditorComponent } from "ng2-ace-editor";
 import { CodeHinterComponent } from "../code_hinter/ui.code_hinter.component";
-import { Split } from "../../../assets/split/split";
 import { ArangoService } from "../../providers/arango.service";
 import { StoreUtils } from "../../common/store";
 
@@ -70,6 +69,7 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    let Split = require("split.js");
     Split(["#aqlCodeEditor" + this.id, "#aqlResultPanel" + this.id], {direction : "vertical", sizes: [50, 50]});
   }
 // .parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement

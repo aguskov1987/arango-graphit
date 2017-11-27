@@ -1,6 +1,5 @@
 import { AfterViewChecked, Component, OnInit } from "@angular/core";
 import { ArangoService } from "./providers/arango.service";
-import { Split } from "../assets/split/split";
 import { AppState, ArangoType, StoreUtils } from "./common/store";
 import { ArangoDb } from "./common/types/arango_database.type";
 import { ArangoGraph } from "./common/types/arango_graph.type";
@@ -33,6 +32,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   public ngOnInit() : void {
+    let Split = require("split.js");
     Split(["#arangoTree", "#arangoContent"], {direction : "horizontal", sizes: [20, 80]});
 
     this.service.loadDatabaseNames().then((names) => {
