@@ -1,16 +1,6 @@
-/**
- * Created by Andrey on 10/5/2017.
- */
 import { Injectable } from "@angular/core";
-
 import * as arango from "arangojs";
 import { StoreUtils } from "../common/store";
-
-export class EdgeDir {
-  public static In : string = "INBOUND";
-  public static Out : string = "OUTBOUND";
-  public static Any : string = "ANY";
-}
 
 @Injectable()
 export class ArangoService { 

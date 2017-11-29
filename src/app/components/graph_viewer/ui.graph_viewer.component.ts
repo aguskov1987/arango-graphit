@@ -53,31 +53,13 @@ export class GraphViewerComponent implements OnInit {
         relsCursor.all().then((rels) => {
           rels.forEach((rel) => {
             if (rel != null) {
-              let link = { data: {source: rel._from.replace("/", "_"), target: rel._to.replace("/", "_"), id: rel._id.replace("/", "_"), relation: rel }};
+              let link = { data: { source: rel._from.replace("/", "_"), target: rel._to.replace("/", "_"), id: rel._id.replace("/", "_"), relation: rel } };
               this.data.push(link);
             }
           });
 
-          // Create color scale
-          let groups: string[] = this.data.filter((el) => el.data.group != null).map((el) => el.data.group);
-          let uniqueGroups: Set<string> = new Set();
-          groups.forEach((g) => uniqueGroups.add(g));
-          let colors = chroma.scale(["#6FB3F1", "#FE955C", "#FAFA6E"]).mode("lch").colors(uniqueGroups.size);
-          let colorMaps: [string, string][] = [];
-          let counter: number = 0;
-          uniqueGroups.forEach((g) => {
-            colorMaps.push([g, colors[counter]]);
-            counter++;
-          });
-          this.data.forEach(element => {
-            if (element.data.group == null) {
-              return;
-            }
-            let color = colorMaps.find((map) => map[0] === element.data.group)[1];
-            element.data.color = color;
-          });
-
-          //TODO: render graph
+          this.addColors();
+          
           let cts = require("cytoscape");
           let cytoscape = cts({
             container: document.getElementById("cytoscapeContainer" + this.id),
@@ -117,6 +99,27 @@ export class GraphViewerComponent implements OnInit {
           });
         });
       });
+    });
+  }
+
+  private addColors() {
+    // Create color scale
+    let groups: string[] = this.data.filter((el) => el.data.group != null).map((el) => el.data.group);
+    let uniqueGroups: Set<string> = new Set();
+    groups.forEach((g) => uniqueGroups.add(g));
+    let colors = chroma.scale(["#6FB3F1", "#FE955C", "#FAFA6E"]).mode("lch").colors(uniqueGroups.size);
+    let colorMaps: [string, string][] = [];
+    let counter: number = 0;
+    uniqueGroups.forEach((g) => {
+      colorMaps.push([g, colors[counter]]);
+      counter++;
+    });
+    this.data.forEach(element => {
+      if (element.data.group == null) {
+        return;
+      }
+      let color = colorMaps.find((map) => map[0] === element.data.group)[1];
+      element.data.color = color;
     });
   }
 }

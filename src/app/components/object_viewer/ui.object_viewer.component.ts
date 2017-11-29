@@ -105,6 +105,8 @@ export class ObjectViewerComponent implements OnInit, OnChanges {
   }
 
   private isObject(item : Item) : boolean {
+    let t = item.type;
+    let i = ["object", "array"].indexOf(t);
     return ["object", "array"].indexOf(item.type) !== -1;
   }
 }
