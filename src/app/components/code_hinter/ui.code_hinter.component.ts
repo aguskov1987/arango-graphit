@@ -1,6 +1,3 @@
-/**
- * Created by Andrey on 9/28/2017.
- */
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 
 enum OptionType {

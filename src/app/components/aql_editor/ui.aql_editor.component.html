@@ -1,4 +1,4 @@
-  <div [id] ="'aqlCodeEditor' + id" >
+  <div [id] ="'aqlCodeEditor' + id" style="overflow: auto;">
     <ace-editor #editor
                 [(text)]="text"
                 [mode]="'aql'"
@@ -7,7 +7,7 @@
                 style="height:100%;">
     </ace-editor>
   </div>
-  <div [id]="'aqlResultPanel' + id">
+  <div [id]="'aqlResultPanel' + id" style="overflow: auto;">
     <object-viewer [json]="queryResult"></object-viewer> 
   </div>
 

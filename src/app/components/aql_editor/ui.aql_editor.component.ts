@@ -11,14 +11,6 @@ import { StoreUtils } from "../../common/store";
     moduleId: module.id,
     selector: "aql-editor",
     templateUrl: "ui.aql_editor.component.html",
-    styles: [`
-      #aqlCodeEditor {
-        overflow: auto;
-      }
-      #aqlResultPanel {
-        overflow: auto;
-      }
-    `],
 })
 export class AqlEditorComponent implements OnInit, AfterViewInit {
   @Input() public id: number;

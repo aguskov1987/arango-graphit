@@ -61,7 +61,7 @@ describe('Graph Viewer Component', () => {
         expect(component.data[0].data.color).not.toEqual(component.data[2].data.color);
     });
 
-    it('should create a graph', fakeAsync(() => {
+    it('should create a graph in a canvas', fakeAsync(() => {
         component.showGraph("", "", 0, "");
         fixture.detectChanges();
         tick();
