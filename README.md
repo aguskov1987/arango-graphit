@@ -21,7 +21,7 @@ The project takes inspirations from a number of existing software such as:
 - Electron
 - Angular 2+
 - Ace editor for AQL queries
-- D3 for graph visualizations
+- Cytoscape for graph visualizations
 - Prme NG for some user controls
 
 
@@ -43,3 +43,8 @@ The project takes inspirations from a number of existing software such as:
     }
 ```
 The issue can be corrected by commenting out the exception but will need to investigate a more reliable fix
+
+## Primary outstanding features
+- table view for aql queries
+- graph label mappings
+- live graph change updates
