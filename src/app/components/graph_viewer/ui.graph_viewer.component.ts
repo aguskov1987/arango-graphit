@@ -15,13 +15,10 @@ import * as chroma from "chroma-js";
 })
 export class GraphViewerComponent implements OnInit {
   @Input() id: number = 0;
-  @Output() public linkHovered = new EventEmitter();
-  @Output() public nodeHovered = new EventEmitter();
-  @Output() public linkOut = new EventEmitter();
-  @Output() public nodeOut = new EventEmitter();
 
   private arangoServer: ArangoService;
   private data: any;
+  private cytoscapeContext: any;
 
   constructor(aService: ArangoService) {
     this.arangoServer = aService;
@@ -97,6 +94,7 @@ export class GraphViewerComponent implements OnInit {
               componentSpacing: 100
             }
           });
+          this.cytoscapeContext = cytoscape;
         });
       });
     });

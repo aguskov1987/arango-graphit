@@ -1,41 +1,53 @@
 <div class="toolstrip">
-    <div class="toolstrip-button" title="Connect to Server">
+    <div [ngClass]="{'default-button-state': connectToServer == 1}" title="Connect to Server">
         <img src="../../../assets/Images/server-network.png" width="16" height="16">
     </div>
 
     <div class="menu-divider"></div>
 
-    <div class="toolstrip-button" title="Open File">
+    <div [ngClass]="{'default-button-state': open == 1}" title="Open File">
         <img src="../../../assets/Images/folder-open.png" width="17" height="13">
     </div>
-    <div class="toolstrip-button" title="Save">
+    <div [ngClass]="{'default-button-state': save == 1}" title="Save">
         <img src="../../../assets/Images/content-save.png" width="15" height="15">
     </div>
-    <div class="toolstrip-button" title="Save All">
+    <div [ngClass]="{'default-button-state': saveAll == 1}" title="Save All">
         <img src="../../../assets/Images/content-save-all.png" width="17" height="17">
     </div>
 
     <div class="menu-divider"></div>
 
-    <div class="toolstrip-button" title="Cut">
+    <div [ngClass]="{'default-button-state': cut == 1, 'disabled-button-state': cut == 0}" title="Cut">
         <img src="../../../assets/Images/content-cut.png" width="17" height="17">
     </div>
-    <div class="toolstrip-button" title="Copy">
+    <div [ngClass]="{'default-button-state': copy == 1, 'disabled-button-state': copy == 0}" title="Copy">
         <img src="../../../assets/Images/content-copy.png" width="17" height="17">
     </div>
-    <div class="toolstrip-button" title="Paste">
+    <div [ngClass]="{'default-button-state': paste == 1, 'disabled-button-state': paste == 0}" title="Paste">
         <img src="../../../assets/Images/content-paste.png" width="17" height="17">
     </div>
 
     <div class="menu-divider"></div>
 
-    <div class="toolstrip-button" title="Run Query" (click)="buttonPressed('run_query')">
+    <div [ngClass]="{'default-button-state': run == 1, 'disabled-button-state': run == 0}" title="Run Query"
+    (click)="buttonPressed('run_query')">
         <img src="../../../assets/Images/play.png" width="17" height="17">
     </div>
-    <div class="toolstrip-button" title="Table View">
+    <div [ngClass]="{'default-button-state': tableView == 1, 'disabled-button-state': tableView == 0}" title="Table View">
         <img src="../../../assets/Images/table.png" width="17" height="17">
     </div>
-    <div class="toolstrip-button" title="JSON View">
+    <div [ngClass]="{'default-button-state': objView == 1, 'disabled-button-state': objView == 0}" title="JSON View">
         <img src="../../../assets/Images/code-braces.png" width="17" height="17">
+    </div>
+
+    <div class="menu-divider"></div>
+
+    <div [ngClass]="{'default-button-state': startTrack == 1, 'disabled-button-state': startTrack == 0}"
+    title="Start Tracking Graph">
+        <img src="../../../assets/Images/video.png" width="17" height="17">
+    </div>
+    <div [ngClass]="{'default-button-state': endTrack == 1, 'disabled-button-state': startTrack == 0}"
+    title="Take Graph Snapshot">
+        <img src="../../../assets/Images/camera-iris.png" width="17" height="17">
     </div>
 </div>

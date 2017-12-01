@@ -1,7 +1,8 @@
 $main-grey: #3C3F41;
 $background-grey: #323232;
+$disabled-opacity: 0.3;
 
-.toolstrip {
+  .toolstrip {
     height: 25px;
     right: 0;
     left: 0;
@@ -13,10 +14,6 @@ $background-grey: #323232;
     display: flex;
   }
 
-  img {
-    image-rendering: -webkit-optimize-contrast;
-  }
-  
   .toolstrip-button {
     padding-top: 4px;
     width: 25px;
@@ -24,13 +21,26 @@ $background-grey: #323232;
     text-align: center;
     -webkit-user-select: none;
   }
+
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
   
-  .toolstrip-button:hover {
+  .default-button-state {
+    @extend .toolstrip-button;
+  }
+  
+  .default-button-state:hover {
     background-color: #464949;
   }
   
-  .toolstrip-button:active {
+  .default-button-state:active {
     background-color: #767773;
+  }
+
+  .disabled-button-state {
+    @extend .toolstrip-button;
+    opacity: $disabled-opacity;
   }
   
   .menu-divider {

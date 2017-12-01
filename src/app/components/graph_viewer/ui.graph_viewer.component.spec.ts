@@ -10,11 +10,11 @@ describe('Graph Viewer Component', () => {
     let component;
     let rootSpy, docsSpy, relsSpy;
 
-    let d1 = {_id: "d1", group: "A"};
-    let d2 = {_id: "d2", group: "B"};
-    let d3 = {_id: "d3", group: "B"};
-    let r1 = {_id: "r1", _from: "d1", _to: "d2"};
-    let r2 = {_id: "r2", _from: "d2", _to: "d3"};
+    let d1 = {_id: "A/d1"};
+    let d2 = {_id: "B/d2"};
+    let d3 = {_id: "B/d3"};
+    let r1 = {_id: "r1", _from: "A/d1", _to: "B/d2"};
+    let r2 = {_id: "r2", _from: "B/d2", _to: "B/d3"};
 
     let arangoService: any;
 
@@ -70,5 +70,14 @@ describe('Graph Viewer Component', () => {
         let el = de.queryAll(By.css("#cytoscapeContainer" + component.id))[0];
         
         expect(el.nativeElement.children[0].children[0].nodeName).toEqual("CANVAS");
+    }));
+
+    it('should store the reference to the Cytoscape object', fakeAsync(() => {
+        component.showGraph("", "", 0, "");
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+        expect(component.cytoscapeContext).not.toBeUndefined();
+        expect(component.cytoscapeContext.getElementById("A_d1")).not.toBeUndefined();
     }));
 });
