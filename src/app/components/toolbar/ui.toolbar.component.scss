@@ -42,6 +42,11 @@ $disabled-opacity: 0.3;
     @extend .toolstrip-button;
     opacity: $disabled-opacity;
   }
+
+  .on-button-state {
+    @extend .toolstrip-button;
+    background-color: #767773;
+  }
   
   .menu-divider {
     width: 2px;

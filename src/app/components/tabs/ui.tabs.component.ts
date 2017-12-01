@@ -5,6 +5,7 @@ import { TabContentComponent } from "./ui.tabContent.component";
 import { ElectronService } from "app/providers/electron.service";
 import { Command } from "app/common/types/command.type";
 import { StoreUtils } from "app/common/store";
+import { AqlResultsView } from "app/components/toolbar/ui.toolbar.component";
 
 export interface ITabItem {
   id : number;
@@ -12,6 +13,9 @@ export interface ITabItem {
   active: boolean;
   database : string;
   graph : string;
+
+  aqlResultsMode: AqlResultsView;
+  tracking: boolean;
 }
 
 @Component({
@@ -71,7 +75,16 @@ export class TabsComponent implements OnInit {
     this.items.forEach((item) => item.active = false);
 
     let nextTabId = this.items.length < 1 ? 0 : this.items.length;
-    this.items.push({id: nextTabId, type: type, graph: graph, database: database, active: true});
+    this.items.push({
+      id: nextTabId,
+      type: type,
+      graph: graph,
+      database: database,
+      active: true,
+      aqlResultsMode: AqlResultsView.Json,
+      tracking: false
+    });
+    StoreUtils.globalEventEmitter.emit("tab_clicked", this.items[this.items.length - 1]);
 
     // Set the names of the current database and graphs
     StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === database);
@@ -84,6 +97,8 @@ export class TabsComponent implements OnInit {
     this.items.forEach((item) => {
       item.active = item.id === id;
       if (item.active) {
+        StoreUtils.globalEventEmitter.emit("tab_clicked", item);
+
         StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === item.database);
         if (StoreUtils.currentDatabase != null) {
           StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === item.graph);          

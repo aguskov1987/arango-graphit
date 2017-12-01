@@ -1,13 +1,14 @@
 // Too simple to test
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { StoreUtils } from "app/common/store";
 
 export enum TabType {
-  DbAQL,
-  GraphAQL,
-  GraphExplorer,
-  Settings,
-  AddCollection,
-  AddRelation,
+  DbAQL = 0,
+  GraphAQL = 1,
+  GraphExplorer = 2,
+  Settings = 3,
+  AddCollection = 4,
+  AddRelation = 5,
 }
 
 @Component({

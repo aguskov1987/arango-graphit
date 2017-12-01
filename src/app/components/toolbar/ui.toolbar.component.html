@@ -33,21 +33,23 @@
     (click)="buttonPressed('run_query')">
         <img src="../../../assets/Images/play.png" width="17" height="17">
     </div>
-    <div [ngClass]="{'default-button-state': tableView == 1, 'disabled-button-state': tableView == 0}" title="Table View">
+    <div [ngClass]="{'default-button-state': tableView == 1, 'disabled-button-state': tableView == 0, 'on-button-state': tableView == 2}"
+    title="Table View">
         <img src="../../../assets/Images/table.png" width="17" height="17">
     </div>
-    <div [ngClass]="{'default-button-state': objView == 1, 'disabled-button-state': objView == 0}" title="JSON View">
+    <div [ngClass]="{'default-button-state': objView == 1, 'disabled-button-state': objView == 0, 'on-button-state': objView == 2}"
+    title="JSON View">
         <img src="../../../assets/Images/code-braces.png" width="17" height="17">
     </div>
 
     <div class="menu-divider"></div>
 
-    <div [ngClass]="{'default-button-state': startTrack == 1, 'disabled-button-state': startTrack == 0}"
-    title="Start Tracking Graph">
+    <div [ngClass]="{'default-button-state': startTrack == 1, 'disabled-button-state': startTrack == 0, 'on-button-state': startTrack == 2}"
+    title="Start Tracking">
         <img src="../../../assets/Images/video.png" width="17" height="17">
     </div>
     <div [ngClass]="{'default-button-state': endTrack == 1, 'disabled-button-state': startTrack == 0}"
-    title="Take Graph Snapshot">
+    title="End Tracking">
         <img src="../../../assets/Images/camera-iris.png" width="17" height="17">
     </div>
 </div>

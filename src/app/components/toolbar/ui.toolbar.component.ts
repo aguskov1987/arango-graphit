@@ -1,5 +1,11 @@
 import { StoreUtils } from '../../common/store';
 import { Component, OnInit } from '@angular/core';
+import { Event, IListener } from 'typescript.events';
+
+export enum AqlResultsView {
+  Table,
+  Json
+}
 
 enum ButtonState {
   Disabled = 0,
@@ -14,6 +20,8 @@ enum ButtonState {
   styleUrls: ['./ui.toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit {
+  private currentTabId: number;
+
   public connectToServer: ButtonState = ButtonState.Default;
   public open: ButtonState = ButtonState.Default;
   public save: ButtonState = ButtonState.Default;
@@ -27,9 +35,45 @@ export class ToolbarComponent implements OnInit {
   public startTrack: ButtonState = ButtonState.Default;
   public endTrack: ButtonState = ButtonState.Default;
 
-  constructor() { }
+  constructor() {
+    StoreUtils.globalEventEmitter.on("tab_clicked", (event) => {
+      let args = event as any;
+      this.currentTabId = args.id;
+      if (args.type === 0 || args.tabType === 1) {
+        this.aqlTabClicked(args.aqlResultsMode);
+      }
+      if (args.type === 3) {
+        this.graphTabClicked(args.tracking);
+      }
+    });
+  }
 
   ngOnInit() { }
+
+  public aqlTabClicked(mode: AqlResultsView) {
+    this.enableClipboard();
+    this.enableAql();
+    this.disableTracking();
+
+    if (mode === AqlResultsView.Table) {
+      this.objView = ButtonState.Default;
+      this.tableView = ButtonState.On;
+    }
+    else {
+      this.objView = ButtonState.On;
+      this.tableView = ButtonState.Default;
+    }
+  }
+
+  public graphTabClicked(tracking: boolean) {
+    this.disableClipboard();
+    this.disableAql();
+    this.enableTracking();
+
+    if (tracking) {
+      this.startTrack = ButtonState.On;
+    }
+  }
 
   public disableClipboard() {
     this.cut = ButtonState.Disabled;

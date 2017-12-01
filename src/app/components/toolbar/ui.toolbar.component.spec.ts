@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { ToolbarComponent } from "app/components/toolbar/ui.toolbar.component";
+import { ToolbarComponent, AqlResultsView } from "app/components/toolbar/ui.toolbar.component";
 import { NO_ERRORS_SCHEMA, DebugElement } from "@angular/core";
 import { By } from '@angular/platform-browser';
 
@@ -84,5 +84,14 @@ describe('Toolbar Component', () => {
         activeButtons = de.queryAll(By.css(".default-button-state"));
 
         expect(activeButtons.length).toBe(12);
+    });
+
+    it('should adjust the toolbar when an AQL tab is activated', () => {
+        component.aqlTabClicked(AqlResultsView.Table);
+        fixture.detectChanges();
+        let de: DebugElement = fixture.debugElement;
+        let onButton = de.queryAll(By.css(".on-button-state"));
+        
+        expect(onButton.length).toBe(1);
     });
 });
