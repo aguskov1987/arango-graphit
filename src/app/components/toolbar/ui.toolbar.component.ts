@@ -1,6 +1,7 @@
 import { StoreUtils } from '../../common/store';
 import { Component, OnInit } from '@angular/core';
 import { Event, IListener } from 'typescript.events';
+import { TabType } from 'app/components/tabs/ui.tab.component';
 
 export enum AqlResultsView {
   Table,
@@ -21,6 +22,7 @@ enum ButtonState {
 })
 export class ToolbarComponent implements OnInit {
   private currentTabId: number;
+  private currentTabType: TabType;
 
   public connectToServer: ButtonState = ButtonState.Default;
   public open: ButtonState = ButtonState.Default;
@@ -39,10 +41,11 @@ export class ToolbarComponent implements OnInit {
     StoreUtils.globalEventEmitter.on("tab_clicked", (event) => {
       let args = event as any;
       this.currentTabId = args.id;
-      if (args.type === 0 || args.tabType === 1) {
+      this.currentTabType = args.type;
+      if (args.type === 0 || args.type === 1) {
         this.aqlTabClicked(args.aqlResultsMode);
       }
-      if (args.type === 3) {
+      if (args.type === 2) {
         this.graphTabClicked(args.tracking);
       }
     });
@@ -116,6 +119,18 @@ export class ToolbarComponent implements OnInit {
         break;
       case "comment_code":
         StoreUtils.globalEventEmitter.emit(StoreUtils.comment_code_clicked);
+        break;
+      case "start_tracking":
+        if (this.startTrack === ButtonState.Default) {
+          StoreUtils.globalEventEmitter.emit(StoreUtils.start_tracking_clicked, {id: this.currentTabId});
+          this.startTrack = ButtonState.On;  
+        }
+        break;
+      case "end_tacking":
+        if (this.startTrack === ButtonState.On) {
+          StoreUtils.globalEventEmitter.emit(StoreUtils.end_tracking_clicked, {id: this.currentTabId});
+          this.startTrack = ButtonState.Default;  
+        }
         break;
       default:
         return;

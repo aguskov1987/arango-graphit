@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { ToolbarComponent, AqlResultsView } from "app/components/toolbar/ui.toolbar.component";
 import { NO_ERRORS_SCHEMA, DebugElement } from "@angular/core";
 import { By } from '@angular/platform-browser';
+import { StoreUtils } from "app/common/store";
 
 describe('Toolbar Component', () => {
     let fixture: ComponentFixture<ToolbarComponent>;
@@ -93,5 +94,39 @@ describe('Toolbar Component', () => {
         let onButton = de.queryAll(By.css(".on-button-state"));
         
         expect(onButton.length).toBe(1);
+    });
+
+    it('should configure tool bar when a graph tab is activated', () => {
+        StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 3, id: 1, tracking: true});
+        fixture.detectChanges();
+        let de: DebugElement = fixture.debugElement;
+        let buttons = de.queryAll(By.css(".default-button-state"));
+        let inactiveButtons = de.queryAll(By.css(".disabled-button-state"));
+        let onButtons = de.queryAll(By.css(".on-button-state"));
+
+        expect(buttons.length).toBe(5);
+        expect(inactiveButtons.length).toBe(6);
+        expect(onButtons.length).toBe(1);
+    });
+
+    it('should re-configure the toolbar when the Start Tracking button is off and clicked', () => {
+        let de: DebugElement = fixture.debugElement;
+        let startTrackButton = de.queryAll(By.css(".default-button-state"))[10];
+        startTrackButton.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(startTrackButton.classes['on-button-state']).toBeTruthy();
+    });
+
+    it('should turn off tracking if enabled when the Stop Tracking button is clicked', () => {
+        StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 3, id: 1, tracking: true});
+        fixture.detectChanges();
+        let de: DebugElement = fixture.debugElement;
+        let stopTrackButton = de.queryAll(By.css(".toolstrip > div"))[15];
+        stopTrackButton.nativeElement.click();
+        fixture.detectChanges();
+        let startTrackButton = de.queryAll(By.css(".toolstrip > div"))[14];
+        
+        expect(startTrackButton.classes['on-button-state']).toBeFalsy();
     });
 });

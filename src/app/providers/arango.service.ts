@@ -1,9 +1,24 @@
 import { Injectable } from "@angular/core";
 import * as arango from "arangojs";
 import { StoreUtils } from "../common/store";
+import { Observable } from "rxjs/Observable";
+
+interface ITrack {
+  dbId: number;
+  lastTick: number;
+}
+
+export interface IDbChange {
+  tick: string;
+  type: number;
+  database: string;
+  cname: string;
+  data: any;
+}
 
 @Injectable()
-export class ArangoService { 
+export class ArangoService {
+  private tabTicks: {[key: number]: ITrack};
   public connector : any;
 
   constructor() {
@@ -61,5 +76,15 @@ export class ArangoService {
 
     let query = `FOR v, e IN 1..${depth} ${dir} '${nodeId}' GRAPH '${graph}' RETURN e`;
     return this.connector.query(query);
+  }
+
+  public startTrackingGraph(id: number) {
+
+  }
+
+  public stopTrackingGraph(id: number): Observable<IDbChange[]> {
+    // type 2300 -> document/relation modification, new document/relation
+    // type 2302 -> remove document/relation
+    return null;
   }
 }

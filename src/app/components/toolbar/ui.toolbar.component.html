@@ -45,11 +45,11 @@
     <div class="menu-divider"></div>
 
     <div [ngClass]="{'default-button-state': startTrack == 1, 'disabled-button-state': startTrack == 0, 'on-button-state': startTrack == 2}"
-    title="Start Tracking">
+    title="Start Tracking" (click)="buttonPressed('start_tracking')">
         <img src="../../../assets/Images/video.png" width="17" height="17">
     </div>
     <div [ngClass]="{'default-button-state': endTrack == 1, 'disabled-button-state': startTrack == 0}"
-    title="End Tracking">
+    title="End Tracking" (click)="buttonPressed('end_tacking')">
         <img src="../../../assets/Images/camera-iris.png" width="17" height="17">
     </div>
 </div>

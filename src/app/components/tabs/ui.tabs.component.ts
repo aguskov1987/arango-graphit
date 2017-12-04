@@ -66,6 +66,19 @@ export class TabsComponent implements OnInit {
       this.addNewTab(TabType.GraphExplorer, command.database, command.graph);
       this.zone.run(() => {console.log("Graph Explorer Tab added")});
     });
+
+    StoreUtils.globalEventEmitter.on(StoreUtils.start_tracking_clicked, (event) => {
+      let args = event as any;
+      if (this.items.length && this.items.length > 0) {
+        this.items.find((item) => item.id === args.id).active = true;        
+      }
+    });
+    StoreUtils.globalEventEmitter.on(StoreUtils.end_tracking_clicked, (event) => {
+      let args = event as any;
+      if (this.items.length && this.items.length > 0) {
+        this.items.find((item) => item.id === args.id).active = false;        
+      }
+    });
   }
 
   public ngOnInit() {
