@@ -1,14 +1,11 @@
-/**
- * Created by Andrey on 10/8/2017.
- */
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from "@angular/core";
 
 interface Item {
-  key : string;
-  value : any;
-  title : string;
-  type : string;
-  isOpened : boolean;
+  key: string;
+  value: any;
+  title: string;
+  type: string;
+  isOpened: boolean;
 }
 
 @Component({
@@ -18,18 +15,18 @@ interface Item {
   styleUrls: ["ui.object_viewer.component.scss"],
 })
 export class ObjectViewerComponent implements OnInit, OnChanges {
-  @Input() public json : any[] | Object | any;
+  @Input() public json: any[] | Object | any;
 
   @Input()
-  get expanded() : boolean {
+  get expanded(): boolean {
     return this._expanded;
   }
-  set expanded(value : boolean) {
+  set expanded(value: boolean) {
     this._expanded = value;
   }
 
-  public asset : Item[] = [];
-  private _expanded : boolean = false;
+  public asset: Item[] = [];
+  private _expanded: boolean = false;
 
   constructor() {
   }
@@ -45,24 +42,24 @@ export class ObjectViewerComponent implements OnInit, OnChanges {
     });
   }
 
-  public ngOnChanges(changes : SimpleChanges) : void {
+  public ngOnChanges(changes: SimpleChanges): void {
     this.ngOnInit();
   }
 
-  public clickHandle(item : Item) {
+  public clickHandle(item: Item) {
     if (!this.isObject(item)) {
       return;
     }
     item.isOpened = !item.isOpened;
   }
 
-  private createItem(key : any, value : any) : Item {
-    let item : Item = {
-      key : key || '""',
+  private createItem(key: any, value: any): Item {
+    let item: Item = {
+      key: key || '""',
       value,
-      title : value,
-      type : undefined,
-      isOpened : false,
+      title: value,
+      type: undefined,
+      isOpened: false
     };
 
     if (typeof (item.value) === "string") {
@@ -104,7 +101,7 @@ export class ObjectViewerComponent implements OnInit, OnChanges {
     return item;
   }
 
-  private isObject(item : Item) : boolean {
+  private isObject(item: Item): boolean {
     let t = item.type;
     let i = ["object", "array"].indexOf(t);
     return ["object", "array"].indexOf(item.type) !== -1;

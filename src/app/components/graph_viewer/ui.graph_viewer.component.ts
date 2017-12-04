@@ -32,14 +32,11 @@ export class GraphViewerComponent implements OnInit {
   private cytoscapeContext: any;
   private tracking: boolean = false;
   private dbChanges: IDbChange[] = [];
-
-  private nodeId: string;
-  private dir: string;
-  private depth: number;
   private rootId: string;
 
   public previewPosition: [string, string] = ["-600px", "-600px"];
   public previewObject: any[] = [];
+  public previewChanges: any;
 
   constructor(aService: ArangoService) {
     this.arangoServer = aService;
@@ -55,10 +52,6 @@ export class GraphViewerComponent implements OnInit {
   }
 
   public showGraph(nodeId: string, dir: string, depth: number, label: string) {
-    this.nodeId = nodeId;
-    this.dir = dir;
-    this.depth = depth;
-
     let docsCall = this.arangoServer.loadObjectGraphNodes(nodeId, dir, depth);
     let relsCall = this.arangoServer.loadObjectGraphRels(nodeId, dir, depth);
     let rootCall = this.arangoServer.loadDocumentById(nodeId);
@@ -69,6 +62,9 @@ export class GraphViewerComponent implements OnInit {
       let root = response[2] as any;
 
       this.data = [];
+
+      // Load the data array with results from the query. Replace the '/' with '_' as cytoscape does not like
+      // slashes in the id field
       this.data.push({ data: { id: root._id.replace("/", "_"), group: root._id.split("/")[0], document: root } });
       this.rootId = this.data[0].data.id;
       docsCursor.all().then((docs) => {
@@ -157,6 +153,14 @@ export class GraphViewerComponent implements OnInit {
             let top = event.originalEvent.clientY + "px";
             let left = event.originalEvent.clientX + "px";
             this.previewPosition = [top, left];
+
+            if (event.target.data.changes != null) {
+              this.previewChanges = event.target.data.changes;
+            }
+          });
+
+          this.cytoscapeContext.on("unselect", (event) => {
+            this.previewPosition = ["-600px", "-600px"];
           });
         });
       });
@@ -164,17 +168,23 @@ export class GraphViewerComponent implements OnInit {
   }
 
   private addColors(): void {
-    // Create color scale
+    // isolate collection names into a Set
     let groups: string[] = this.data.filter((el) => el.data.group != null).map((el) => el.data.group);
     let uniqueGroups: Set<string> = new Set();
     groups.forEach((g) => uniqueGroups.add(g));
+
+    // Create a color scale of the same count as the unique collections
     let colors = chroma.scale(["#6FB3F1", "#FE955C", "#FAFA6E"]).mode("lch").colors(uniqueGroups.size);
     let colorMaps: [string, string][] = [];
     let counter: number = 0;
+
+    // Assign each unique collection a color
     uniqueGroups.forEach((g) => {
       colorMaps.push([g, colors[counter]]);
       counter++;
     });
+
+    // Store the color in the data object of the items in the cytoscape data array so it can later be used for rendering
     this.data.forEach(element => {
       if (element.data.group == null) {
         return;
