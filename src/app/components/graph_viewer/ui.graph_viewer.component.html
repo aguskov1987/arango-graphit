@@ -1,4 +1,11 @@
 <div class="cytoscape-container" [id]="'cytoscapeContainer' + id"></div>
 <div class="preview" [id]="'preview' + id" [ngStyle]="{'top': previewPosition[0], 'left': previewPosition[1]}">
-    <object-viewer [json]="previewObject"></object-viewer>
+    <div *ngIf="previewObject != null && previewObject.changes != null">
+        <button (click)="showHideChanges()">View changes</button>
+    </div>
+    <object-viewer *ngIf="previewObject != null && previewObject.changes == null || (previewObject.changes != null && !previewObject.changesVisible)"
+        [json]="previewObject.document != null ? previewObject.document : previewObject.relation">
+    </object-viewer>
+    <div class="changes" *ngIf="previewObject != null && previewObject.changes != null && previewObject.changesVisible">
+    </div>
 </div>

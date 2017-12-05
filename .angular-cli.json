@@ -23,12 +23,15 @@
         "styles.scss",
         "../node_modules/font-awesome/css/font-awesome.min.css",
         "../node_modules/primeng/resources/primeng.min.css",
-        "../node_modules/primeng/resources/themes/cruze/theme.css"
+        "../node_modules/primeng/resources/themes/cruze/theme.css",
+        "../node_modules/jsondiffpatch/public/build/jsondiffpatch-formatters.min.js"
       ],
       "scripts": [
         "./assets/split/split.min.js",
         "../node_modules/ace-builds/src-min-noconflict/ace.js",
-        "../node_modules/ace-builds/src-min-noconflict/mode-aql.js"
+        "../node_modules/ace-builds/src-min-noconflict/mode-aql.js",
+        "../node_modules/jsondiffpatch/public/formatters-styles/html.css",
+        "../node_modules/jsondiffpatch/public/formatters-styles/annotated.css"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

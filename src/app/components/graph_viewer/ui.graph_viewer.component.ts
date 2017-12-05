@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, Input } from "@angular/core";
 import { ArangoService, IDbChange } from "../../providers/arango.service";
 import * as chroma from "chroma-js";
 import { StoreUtils } from "app/common/store";
-import * as df from "deep-diff";
+import {DiffPatcher} from "jsondiffpatch";
 
 @Component({
   moduleId: module.id,
@@ -33,13 +33,14 @@ export class GraphViewerComponent implements OnInit {
   private tracking: boolean = false;
   private dbChanges: IDbChange[] = [];
   private rootId: string;
+  private patcher: DiffPatcher;
 
   public previewPosition: [string, string] = ["-600px", "-600px"];
-  public previewObject: any[] = [];
-  public previewChanges: any;
+  public previewObject: any = {};
 
   constructor(aService: ArangoService) {
     this.arangoServer = aService;
+    this.patcher = new DiffPatcher();
 
     StoreUtils.globalEventEmitter.on(StoreUtils.start_tracking_clicked, (event) => {
       let args = event as any;
@@ -147,16 +148,11 @@ export class GraphViewerComponent implements OnInit {
           this.cytoscapeContext = cytoscape;
 
           this.cytoscapeContext.on("click", "*", (event) => {
-            this.previewObject = event.target.data().document != null ? event.target.data().document
-              : event.target.data().relation;
+            this.previewObject = event.target.data();
 
             let top = event.originalEvent.clientY + "px";
             let left = event.originalEvent.clientX + "px";
             this.previewPosition = [top, left];
-
-            if (event.target.data.changes != null) {
-              this.previewChanges = event.target.data.changes;
-            }
           });
 
           this.cytoscapeContext.on("unselect", (event) => {
@@ -165,6 +161,12 @@ export class GraphViewerComponent implements OnInit {
         });
       });
     });
+  }
+
+  public showHideChanges() {
+    if (this.previewObject != null && this.previewObject.changesVisible != null) {
+      this.previewObject.changesVisible = !this.previewObject.changesVisible;
+    }
   }
 
   private addColors(): void {
@@ -209,12 +211,15 @@ export class GraphViewerComponent implements OnInit {
           let original = this.cytoscapeContext.getElementById(d.data.id);
           let difference;
           if (original.data().document != null) {
-            difference = df.default.diff(original.data().document, change.data);
+            difference = this.patcher.diff(original.data().document, change.data);
+            original.data().document = change.data;
           }
           else {
-            difference = df.default.diff(original.data().relation, change.data);
+            difference = this.patcher.diff(original.data().relation, change.data);
+            original.data().relation = change.data;
           }
           original.data().changes = difference;
+          original.data().changesVisible = false;
         }
       }
     }
