@@ -126,10 +126,10 @@ export class ToolbarComponent implements OnInit {
           this.startTrack = ButtonState.On;  
         }
         break;
-      case "end_tacking":
+      case "end_tracking":
         if (this.startTrack === ButtonState.On) {
-          StoreUtils.globalEventEmitter.emit(StoreUtils.end_tracking_clicked, {id: this.currentTabId});
-          this.startTrack = ButtonState.Default;  
+          StoreUtils.graphTrackingEventEmitter.emit(StoreUtils.end_tracking_clicked, {id: this.currentTabId});
+          this.startTrack = ButtonState.Default;
         }
         break;
       default:

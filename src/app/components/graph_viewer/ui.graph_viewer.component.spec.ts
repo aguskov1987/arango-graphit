@@ -1,6 +1,7 @@
 import {GraphViewerComponent} from './ui.graph_viewer.component';
 
 import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ArangoService } from 'app/providers/arango.service';
@@ -37,6 +38,7 @@ describe('Graph Viewer Component', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [HttpModule],
             declarations: [GraphViewerComponent],
             providers: [ArangoService],
             schemas:[NO_ERRORS_SCHEMA]

@@ -26,8 +26,9 @@ export class StoreUtils {
 
   public static app_state: AppState = AppState.AqlEditor;
   public static globalEventEmitter: Event = new Event();
+  public static graphTrackingEventEmitter: Event = new Event();
   public static query_run_clicked: string = "query_run_clicked";
   public static comment_code_clicked: string = "comment_code_clicked";
-  public static start_tracking_clicked: string = "start_tracking_clicked";
-  public static end_tracking_clicked: string = "end_tracking_clicked";
+  public static start_tracking_clicked: string = "tracking_started_clicked";
+  public static end_tracking_clicked: string = "tracking_ended_clicked";
 }

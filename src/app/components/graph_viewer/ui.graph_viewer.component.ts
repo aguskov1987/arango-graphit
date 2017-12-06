@@ -45,8 +45,15 @@ export class GraphViewerComponent implements OnInit {
     StoreUtils.globalEventEmitter.on(StoreUtils.start_tracking_clicked, (event) => {
       let args = event as any;
       if (this.id === args.id) {
+        this.arangoServer.startTrackingGraph(args.id);
       }
     });
+    StoreUtils.graphTrackingEventEmitter.on(StoreUtils.end_tracking_clicked, (event) => {
+      let args = event as any;
+      if (this.id === args.id) {
+        this.updateGraph(args.id);
+      }
+    })
   }
 
   public ngOnInit() {
@@ -149,6 +156,7 @@ export class GraphViewerComponent implements OnInit {
 
           this.cytoscapeContext.on("click", "*", (event) => {
             this.previewObject = event.target.data();
+            console.log("preview object", this.previewObject);
 
             let top = event.originalEvent.clientY + "px";
             let left = event.originalEvent.clientX + "px";
@@ -196,8 +204,11 @@ export class GraphViewerComponent implements OnInit {
     });
   }
 
-  private updateGraph() {
-    this.arangoServer.stopTrackingGraph(0).subscribe((changes) => {
+  private updateGraph(tabId: number) {
+    this.arangoServer.stopTrackingGraph(tabId).subscribe((changes) => {
+      if (changes == null || !changes.length || changes.length < 1) {
+        return;
+      }
       this.dbChanges = changes;
       this.updateDocs();
     });

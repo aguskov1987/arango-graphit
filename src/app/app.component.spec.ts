@@ -5,10 +5,12 @@ import { ToolbarComponent } from 'app/components/toolbar/ui.toolbar.component';
 import { TreeViewComponent } from 'app/components/tree_view/ui.tree_view.component';
 import { ElectronService } from 'app/providers/electron.service';
 import { ArangoService } from 'app/providers/arango.service';
+import { HttpModule } from '@angular/http';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [HttpModule],
       declarations: [
         AppComponent, ToolbarComponent, TreeViewComponent
       ],

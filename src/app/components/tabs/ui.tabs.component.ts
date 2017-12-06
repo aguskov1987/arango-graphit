@@ -6,6 +6,7 @@ import { ElectronService } from "app/providers/electron.service";
 import { Command } from "app/common/types/command.type";
 import { StoreUtils } from "app/common/store";
 import { AqlResultsView } from "app/components/toolbar/ui.toolbar.component";
+import { ArangoService } from "app/providers/arango.service";
 
 export interface ITabItem {
   id : number;
@@ -45,10 +46,12 @@ export class TabsComponent implements OnInit {
   @ViewChildren(TabContentComponent) public windows : QueryList<TabContentComponent>;
 
   private electronService: ElectronService;
+  private arangoService: ArangoService;
   private zone: NgZone;
 
-  constructor(es: ElectronService, z: NgZone) {
+  constructor(es: ElectronService, z: NgZone, as: ArangoService) {
     this.electronService = es;
+    this.arangoService = as;
     this.zone = z;
 
     this.electronService.ipcRenderer.on("open_db_query_msg", (event, args) => {
@@ -121,7 +124,8 @@ export class TabsComponent implements OnInit {
   }
 
   public tabCloseClicked(id : number) {
-    console.log(this.items, id);
+    // Notify the arango service so it would re-adjust the tracking records
+    this.arangoService.tabClosed(id);
     // deactivate all tabs
     this.items.forEach((item) => item.active = false);
 

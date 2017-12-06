@@ -10,6 +10,7 @@ import { GraphObjExplorerComponent } from 'app/components/graph_object_explorer/
 import { GraphViewerComponent } from 'app/components/graph_viewer/ui.graph_viewer.component';
 import { AceEditorComponent } from 'ng2-ace-editor/src/component';
 import { ElectronService } from 'app/providers/electron.service';
+import { HttpModule } from '@angular/http';
 // endregion
 
 describe('Tabs Component', () => {
@@ -23,10 +24,11 @@ describe('Tabs Component', () => {
         }
 
         TestBed.configureTestingModule({
+            imports: [HttpModule],
             declarations: [TabsComponent, TabComponent, TabContentComponent, AqlEditorComponent,
                 GraphObjExplorerComponent, GraphViewerComponent, AceEditorComponent],
             schemas: [NO_ERRORS_SCHEMA],
-            providers: [{provide: ElectronService, useValue: electronServiceStub}]
+            providers: [{provide: ElectronService, useValue: electronServiceStub}, ArangoService]
         }).compileComponents;
     }));
 
