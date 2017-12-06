@@ -18,7 +18,7 @@ export interface IDbChange {
 
 @Injectable()
 export class ArangoService {
-  private tabTicks: {[key: number]: ITrack};
+  private tabTicks: {[tab: number]: ITrack};
   public connector : any;
 
   constructor() {
@@ -28,6 +28,10 @@ export class ArangoService {
 
   public loadDatabaseNames() : Promise<string[]> {
     return this.connector.listDatabases();
+  }
+
+  public async getDatabaseInfo(dbName): Promise<any> {
+    return  await this.connector.useDatabase(dbName).get();
   }
 
   public loadDbCollections(dbName) : Promise<any[]> {
@@ -79,7 +83,7 @@ export class ArangoService {
   }
 
   public startTrackingGraph(id: number) {
-
+    this.tabTicks[id] = {dbId: 1, lastTick: 1};
   }
 
   public stopTrackingGraph(id: number): Observable<IDbChange[]> {

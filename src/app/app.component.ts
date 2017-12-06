@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     };
   }
 
-  public ngOnInit() : void {
+  public ngOnInit(): void {
     let Split = require("split.js");
     Split(["#arangoTree", "#arangoContent"], {direction : "horizontal", sizes: [20, 80]});
 
@@ -64,6 +64,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
         let collectionsCall = this.service.loadDbCollections(name);
         let graphCall = this.service.loadDbGraphs(name);
         Promise.all([collectionsCall, graphCall]).then((response) => {
+          this.service.getDatabaseInfo(name).then((info) => {
+            arangoDb.id = info.id;
+          })
+
           let graphs = response[1];
           let docs = response[0].filter((c) => c.type === ArangoType.Document).map((c) => c.name);
           let rels = response[0].filter((c) => c.type === ArangoType.Relation).map((c) => c.name);
