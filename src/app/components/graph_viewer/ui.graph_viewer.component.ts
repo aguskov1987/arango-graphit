@@ -8,21 +8,7 @@ import {DiffPatcher} from "jsondiffpatch";
   moduleId: module.id,
   selector: "graph-viewer",
   templateUrl: "ui.graph_viewer.component.html",
-  styles: [`
-    .cytoscape-container {
-      height: 100%;
-      width: 100%;
-    }
-    .preview {
-      position: fixed;
-      background-color: #1E1E1E;
-      width: 500px;
-      border: 1px solid #aba6a5;
-      max-height: 400px;
-      overflow: auto;
-      padding: 0.5em;
-    }
-  `],
+  styleUrls: ["ui.graph_viewer.component.scss"],
 })
 export class GraphViewerComponent implements OnInit {
   @Input() id: number = 0;
@@ -57,6 +43,7 @@ export class GraphViewerComponent implements OnInit {
   }
 
   public ngOnInit() {
+    console.log(global);
   }
 
   public showGraph(nodeId: string, dir: string, depth: number, label: string) {
@@ -174,6 +161,14 @@ export class GraphViewerComponent implements OnInit {
   public showHideChanges() {
     if (this.previewObject != null && this.previewObject.changesVisible != null) {
       this.previewObject.changesVisible = !this.previewObject.changesVisible;
+
+      if (this.previewObject.changesVisible) {
+        window.setTimeout(() => {
+          let html = (global as any).formatter.format(this.previewObject.delta, this.previewObject.original);
+          document.getElementById("changes" + this.id).innerHTML = html;
+        }, 500);
+
+      }
     }
   }
 
@@ -219,18 +214,23 @@ export class GraphViewerComponent implements OnInit {
       let id = d.data.id.replace("_", "/");
       for (let change of this.dbChanges) {
         if (change.type === 2300 && change.data._id === id) {
-          let original = this.cytoscapeContext.getElementById(d.data.id);
-          let difference;
-          if (original.data().document != null) {
-            difference = this.patcher.diff(original.data().document, change.data);
-            original.data().document = change.data;
+          let element = this.cytoscapeContext.getElementById(d.data.id);
+          let delta;
+
+          // Each node has a data property which holds the objects. Here we get the delta between the original value
+          // and the new changed value and store the delta in the 'changes' property of the object
+          if (element.data().document != null) {
+            delta = this.patcher.diff(element.data().document, change.data);
+            element.data().original = JSON.parse(JSON.stringify(element.data().document), this.patcher.dateReviver);
+            element.data().document = change.data;
           }
           else {
-            difference = this.patcher.diff(original.data().relation, change.data);
-            original.data().relation = change.data;
+            delta = this.patcher.diff(element.data().relation, change.data);
+            element.data().original = JSON.parse(JSON.stringify(element.data().relation), this.patcher.dateReviver);
+            element.data().relation = change.data;
           }
-          original.data().changes = difference;
-          original.data().changesVisible = false;
+          element.data().delta = delta;
+          element.data().changesVisible = false;
         }
       }
     }

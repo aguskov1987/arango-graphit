@@ -1,0 +1,52 @@
+  .cytoscape-container {
+    height: 100%;
+    width: 100%;
+  }
+
+  .object-viewer-container {
+      border-top: 1px solid rgba(255, 255, 255, 0.438);
+  }
+
+  .changes {
+    border-top: 1px solid rgba(255, 255, 255, 0.438);
+    color: wheat;
+  }
+
+  .preview {
+    position: fixed;
+    background-color: #1E1E1E;
+    width: 500px;
+    border: 1px solid #aba6a5;
+    max-height: 400px;
+    overflow: auto;
+    padding: 0.5em;
+  }
+
+  .delta-button {
+    padding: 1px;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    -webkit-user-select: none;
+  }
+
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+  
+  .delta-button:hover {
+    background-color: #464949;
+  }
+  
+  .delta-button:active {
+    background-color: #767773;
+  }
+
+  .delta-button-on {
+    padding: 2px;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    -webkit-user-select: none;
+    background-color: #767773;
+  }
