@@ -43,7 +43,6 @@ export class GraphViewerComponent implements OnInit {
   }
 
   public ngOnInit() {
-    console.log(global);
   }
 
   public showGraph(nodeId: string, dir: string, depth: number, label: string) {
@@ -167,7 +166,6 @@ export class GraphViewerComponent implements OnInit {
           let html = (global as any).formatter.format(this.previewObject.delta, this.previewObject.original);
           document.getElementById("changes" + this.id).innerHTML = html;
         }, 500);
-
       }
     }
   }

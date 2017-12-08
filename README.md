@@ -11,6 +11,19 @@ ArangoDB is a multi-data-model database which combines key-value storage, docume
 - Add/remove databases, document collections, relation collections, graphs, graph vertex/relation collections, documents and relations
 - Explore graphs of objects
 
+## Screenshots
+![GraphIt](src/assets/Images/home_screen.png)
+Home Screen: the left pane shows database and graph
+
+![GraphIt](src/assets/Images/aql_int.png)
+AQL Editor with intellisense (very basic right now)
+
+![GraphIt](src/assets/Images/aql_results.png)
+AQL results tab
+
+![GraphIt](src/assets/Images/graph_explorer.png)
+Graph Explorer with object preview
+
 ## Inspirations
 The project takes inspirations from a number of existing software such as:
 - MS SQL Server Management Studio: layout of the UI components, database tree view, tabs layout
