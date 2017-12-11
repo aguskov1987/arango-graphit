@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output, Input } from "@angular/core";
 import { ArangoService, IDbChange } from "../../providers/arango.service";
 import * as chroma from "chroma-js";
 import { StoreUtils } from "app/common/store";
-import {DiffPatcher} from "jsondiffpatch";
+import { DiffPatcher } from "jsondiffpatch";
 
 @Component({
   moduleId: module.id,
@@ -11,7 +11,7 @@ import {DiffPatcher} from "jsondiffpatch";
   styleUrls: ["ui.graph_viewer.component.scss"],
 })
 export class GraphViewerComponent implements OnInit {
-  @Input() id: number = 0;
+  @Input() public id: number = 0;
 
   private arangoServer: ArangoService;
   private data: any;
@@ -19,6 +19,8 @@ export class GraphViewerComponent implements OnInit {
   private tracking: boolean = false;
   private dbChanges: IDbChange[] = [];
   private rootId: string;
+  private dir: string;
+  private depth: number;
   private patcher: DiffPatcher;
 
   public previewPosition: [string, string] = ["-600px", "-600px"];
@@ -46,6 +48,10 @@ export class GraphViewerComponent implements OnInit {
   }
 
   public showGraph(nodeId: string, dir: string, depth: number, label: string) {
+    this.rootId = nodeId;
+    this.depth = depth;
+    this.dir = dir;
+
     let docsCall = this.arangoServer.loadObjectGraphNodes(nodeId, dir, depth);
     let relsCall = this.arangoServer.loadObjectGraphRels(nodeId, dir, depth);
     let rootCall = this.arangoServer.loadDocumentById(nodeId);
@@ -60,7 +66,6 @@ export class GraphViewerComponent implements OnInit {
       // Load the data array with results from the query. Replace the '/' with '_' as cytoscape does not like
       // slashes in the id field
       this.data.push({ data: { id: root._id.replace("/", "_"), group: root._id.split("/")[0], document: root } });
-      this.rootId = this.data[0].data.id;
       docsCursor.all().then((docs) => {
         docs.forEach((doc) => {
           if (doc != null) {
@@ -78,7 +83,7 @@ export class GraphViewerComponent implements OnInit {
           });
 
           this.addColors();
-          
+
           let cts = require("cytoscape");
           let cytoscape = cts({
             container: document.getElementById("cytoscapeContainer" + this.id),
@@ -204,15 +209,46 @@ export class GraphViewerComponent implements OnInit {
       }
       this.dbChanges = changes;
       this.updateDocs();
+      this.updateRemovedEdges();
+      this.updateAddedEdges();
     });
   }
 
-  private updateDocs() {
+  private updateRemovedEdges(): void {
+    let removedRelations = this.dbChanges
+      .filter((change) => change.type === 2302 && change.data._from != null);
+
+    let edges = this.cytoscapeContext.$("edge");
+    if (edges.length && edges.length > 0) {
+      edges.forEach((edge) => {
+        if (removedRelations.find((rel) => rel.data._from === edge.data()._from && rel.data._to === edge.data()._to) != null) {
+          edge.style("line-style", "dotted");
+        }
+      });
+    }
+  }
+
+  private updateAddedEdges(): void {
+    // Query the graph with the same paramenters but exclude the vertices and edge already present
+    // Add the new objects to the graph and mark them as 'new'
+    
+
+    // Re-run the layout to position the nodes
+    let layout = this.cytoscapeContext.layout({
+      name: 'cose',
+      padding: 50,
+      componentSpacing: 100
+    });
+    layout.run();
+  }
+
+  private updateDocs(): void {
     for (let d of this.data) {
       let id = d.data.id.replace("_", "/");
       for (let change of this.dbChanges) {
         if (change.type === 2300 && change.data._id === id) {
           let element = this.cytoscapeContext.getElementById(d.data.id);
+          element.style("border-color", "orange", );
           let delta;
 
           // Each node has a data property which holds the objects. Here we get the delta between the original value

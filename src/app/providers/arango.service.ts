@@ -73,19 +73,25 @@ export class ArangoService {
     }
   }
 
-  public loadObjectGraphNodes(nodeId: string, dir: string, depth: number): Promise<arango.Cursor> {
+  public loadObjectGraphNodes(nodeId: string, dir: string, depth: number, excludes: string[] = []): Promise<arango.Cursor> {
     this.connector.useDatabase(StoreUtils.currentDatabase.name);
     let graph = StoreUtils.currentGraph.name;
 
-    let query = `FOR v IN 1..${depth} ${dir} '${nodeId}' GRAPH '${graph}' OPTIONS {uniqueVertices: "global", bfs: true} RETURN v`;
+    let filter = this.buildFilter(excludes);
+    let query = `FOR v IN 1..${depth} ${dir} '${nodeId}' 
+      GRAPH '${graph}' 
+      OPTIONS {uniqueVertices: "global", bfs: true} 
+      ${filter} 
+      RETURN v`;
     return this.connector.query(query);
   }
 
-  public loadObjectGraphRels(nodeId: string, dir: string, depth: number): Promise<arango.Cursor> {
+  public loadObjectGraphRels(nodeId: string, dir: string, depth: number, excludes: string[] = []): Promise<arango.Cursor> {
     this.connector.useDatabase(StoreUtils.currentDatabase.name);
     let graph = StoreUtils.currentGraph.name;
 
-    let query = `FOR v, e IN 1..${depth} ${dir} '${nodeId}' GRAPH '${graph}' RETURN e`;
+    let filter = this.buildFilter(excludes);
+    let query = `FOR v, e IN 1..${depth} ${dir} '${nodeId}' GRAPH '${graph}' ${filter} RETURN e`;
     return this.connector.query(query);
   }
 
@@ -105,7 +111,7 @@ export class ArangoService {
   public stopTrackingGraph(tabId: number): Observable<IDbChange[]> {
     // type 2300 -> document/relation modification, new document/relation
     // type 2302 -> remove document/relation
-
+    
     let track = this.tabTicks[tabId];
     if (track == null) {
       throw `no graph tracking for tab ${tabId} is available`
@@ -127,5 +133,22 @@ export class ArangoService {
       let json = JSON.parse(body);
       return json.rows;
     })
+  }
+
+  private buildFilter(ids: string[]): string {
+    let filter = "";
+    if (ids.length > 0 ) {
+      filter = "FILTER v._id NOT IN [";
+      for (let i = 0; i < ids.length; i++) {
+        if (i < ids.length - 1) {
+          filter += (ids[i] + ", ");
+        }
+        else {
+          filter += (ids[i] + "]");
+        }
+      }
+    }
+
+    return filter;
   }
 }
