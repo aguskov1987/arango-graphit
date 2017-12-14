@@ -28,7 +28,7 @@ Graph Explorer with object preview
 The project takes inspirations from a number of existing software such as:
 - MS SQL Server Management Studio: layout of the UI components, database tree view, tabs layout
 - Visual Studio Code: color scheme, tabs layout, tree view
-- Jetbrains Webstorm and other Jetbrains products: color scheme, tan layout, tree view
+- Jetbrains Webstorm and other Jetbrains products: color scheme, tab layout, tree view
 
 ## Technologies
 - Electron
@@ -58,7 +58,14 @@ The project takes inspirations from a number of existing software such as:
 ```
 The issue can be corrected by commenting out the exception but will need to investigate a more reliable fix
 
-## Primary outstanding features
-- table view for aql queries
-- graph label mappings
-- live graph change updates
+## Roadmap to alpha release
+### Primary features
+- Connect to server window - currently the user credentials are hardwired in the code. Need to add an option to enter these details in a separate window and have the system remeber the credentials
+- Table view for aql queries - similar to the original web app bundled with arango
+- Graph label mappings - when the user enters details for graph view, there is an option to indicate what field to use to show node labels. Sometimes the field is not very explicit (for example, it can be a int document type). I would be nice to have a stored map for this types of fields so the graph would actually show proper names chosen by the user
+- Graph change updates (I am curently working on it) - I found it difficult to track what happens to a graph when performing an operation and then checking whether all nodes and relations are updated properly. For this reason, I am implementing a graph tracker which would watch the graph and reflect any updated
+
+### Standard features not implemented yet
+- Save AQL query, save all
+- Open AQL query, open recent
+- Buttons for cut, copy and paste still need to get wired
