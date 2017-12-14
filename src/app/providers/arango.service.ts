@@ -77,7 +77,7 @@ export class ArangoService {
     this.connector.useDatabase(StoreUtils.currentDatabase.name);
     let graph = StoreUtils.currentGraph.name;
 
-    let filter = this.buildFilter(excludes);
+    let filter = this.buildFilter(excludes, "v");
     let query = `FOR v IN 1..${depth} ${dir} '${nodeId}' 
       GRAPH '${graph}' 
       OPTIONS {uniqueVertices: "global", bfs: true} 
@@ -90,7 +90,7 @@ export class ArangoService {
     this.connector.useDatabase(StoreUtils.currentDatabase.name);
     let graph = StoreUtils.currentGraph.name;
 
-    let filter = this.buildFilter(excludes);
+    let filter = this.buildFilter(excludes, "e");
     let query = `FOR v, e IN 1..${depth} ${dir} '${nodeId}' GRAPH '${graph}' ${filter} RETURN e`;
     return this.connector.query(query);
   }
@@ -105,13 +105,23 @@ export class ArangoService {
   }
 
   public tabClosed(tabId: number) {
-    
+    let newTabs: { [tab: number]: ITrack } = {};
+    for (let tab in this.tabTicks) {
+      let id = parseInt(tab);
+      if (id < tabId) {
+        newTabs[id] = this.tabTicks[id];
+      }
+      else if (id > tabId) {
+        newTabs[id - 1] = this.tabTicks[id];
+      }
+    }
+    this.tabTicks = newTabs;
   }
 
   public stopTrackingGraph(tabId: number): Observable<IDbChange[]> {
     // type 2300 -> document/relation modification, new document/relation
     // type 2302 -> remove document/relation
-    
+
     let track = this.tabTicks[tabId];
     if (track == null) {
       throw `no graph tracking for tab ${tabId} is available`
@@ -135,16 +145,16 @@ export class ArangoService {
     })
   }
 
-  private buildFilter(ids: string[]): string {
+  private buildFilter(ids: string[], forWhat: string): string {
     let filter = "";
     if (ids.length > 0 ) {
-      filter = "FILTER v._id NOT IN [";
+      filter = `FILTER ${forWhat}._id NOT IN [`;
       for (let i = 0; i < ids.length; i++) {
         if (i < ids.length - 1) {
-          filter += (ids[i] + ", ");
+          filter += ("'" + ids[i] + "'" + ", ");
         }
         else {
-          filter += (ids[i] + "]");
+          filter += ("'" + ids[i] + "'" + "]");
         }
       }
     }

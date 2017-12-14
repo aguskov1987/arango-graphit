@@ -8,6 +8,7 @@ import { GraphViewerComponent } from 'app/components/graph_viewer/ui.graph_viewe
 import { ArangoService } from 'app/providers/arango.service';
 import { TabType } from 'app/components/tabs/ui.tab.component';
 import { AceEditorComponent } from 'ng2-ace-editor/src/component';
+import { HttpModule } from '@angular/http';
 // endregion
 
 describe("Tab content component", () => {
@@ -18,6 +19,7 @@ describe("Tab content component", () => {
     // Call async beforeEach() to initialize test bed for components with external templates
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [HttpModule],
             declarations: [TabContentComponent, AqlEditorComponent, GraphObjExplorerComponent, GraphViewerComponent, AceEditorComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [ArangoService, Renderer2]

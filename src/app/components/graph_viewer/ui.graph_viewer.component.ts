@@ -231,15 +231,61 @@ export class GraphViewerComponent implements OnInit {
   private updateAddedEdges(): void {
     // Query the graph with the same paramenters but exclude the vertices and edge already present
     // Add the new objects to the graph and mark them as 'new'
+    let nodeIds: string[] = this.data
+      .filter((element) => element.data.document != null)
+      .map((element) => element.data.document._id);
     
+    let relIds: string[] = this.data
+      .filter((element) => element.data.relation != null)
+      .map((element) => element.data.relation._id);
 
-    // Re-run the layout to position the nodes
-    let layout = this.cytoscapeContext.layout({
-      name: 'cose',
-      padding: 50,
-      componentSpacing: 100
-    });
-    layout.run();
+    let docsCall = this.arangoServer.loadObjectGraphNodes(this.rootId, this.dir, this.depth, nodeIds);
+    let relsCall = this.arangoServer.loadObjectGraphRels(this.rootId, this.dir, this.depth, relIds);
+    Promise.all([docsCall, relsCall]).then((response) => {
+      let docsCursor = response[0];
+      let relsCursor = response[1];
+
+      docsCursor.all().then((docs) => {
+        docs.forEach((doc) => {
+          if (doc != null) {
+            let node = {
+              data: {
+                id: doc._id.replace("/", "_"),
+                group: doc._id.split("/")[0],
+                document: doc,
+                color: "green"
+              }
+            };
+            this.cytoscapeContext.add(node);
+          }
+        });
+
+        relsCursor.all().then((rels) => {
+          rels.forEach((rel) => {
+            if (rel != null) {
+              let link = {
+                data: {
+                  source: rel._from.replace("/", "_"),
+                  target: rel._to.replace("/", "_"),
+                  id: rel._id.replace("/", "_"),
+                  relation: rel,
+                  color: "green"
+                }
+              };
+              this.cytoscapeContext.add(link);
+            }
+          });
+        });
+      })
+
+      // Re-run the layout to position the nodes
+      let layout = this.cytoscapeContext.layout({
+        name: 'cose',
+        padding: 50,
+        componentSpacing: 100
+      });
+      layout.run();
+    })
   }
 
   private updateDocs(): void {

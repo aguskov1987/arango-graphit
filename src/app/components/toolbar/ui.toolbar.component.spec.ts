@@ -97,7 +97,7 @@ describe('Toolbar Component', () => {
     });
 
     it('should configure tool bar when a graph tab is activated', () => {
-        StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 3, id: 1, tracking: true});
+        StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 2, id: 1, tracking: true});
         fixture.detectChanges();
         let de: DebugElement = fixture.debugElement;
         let buttons = de.queryAll(By.css(".default-button-state"));
