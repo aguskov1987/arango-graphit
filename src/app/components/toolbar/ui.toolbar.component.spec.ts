@@ -30,10 +30,13 @@ describe('Toolbar Component', () => {
         let de: DebugElement = fixture.debugElement;
         let buttons = de.queryAll(By.css(".default-button-state"));
 
-        expect(buttons.length).toBe(12);
+        expect(buttons.length).toBe(4);
     });
 
     it('should disable and enable clipboard buttons', () => {
+        component.enableAql();
+        component.enableClipboard();
+        component.enableTracking();
         component.disableClipboard();
         fixture.detectChanges();
         let de: DebugElement = fixture.debugElement;
@@ -52,6 +55,9 @@ describe('Toolbar Component', () => {
     });
 
     it('should disable and enable AQL buttons', () => {
+        component.enableAql();
+        component.enableClipboard();
+        component.enableTracking();
         component.disableAql();
         fixture.detectChanges();
         let de: DebugElement = fixture.debugElement;
@@ -70,6 +76,9 @@ describe('Toolbar Component', () => {
     });
 
     it('should disable and enable tracking buttons', () => {
+        component.enableAql();
+        component.enableClipboard();
+        component.enableTracking();
         component.disableTracking();
         fixture.detectChanges();
         let de: DebugElement = fixture.debugElement;
@@ -110,11 +119,12 @@ describe('Toolbar Component', () => {
     });
 
     it('should re-configure the toolbar when the Start Tracking button is off and clicked', () => {
+        StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 2, id: 1, tracking: true});
+        fixture.detectChanges();
         let de: DebugElement = fixture.debugElement;
-        let startTrackButton = de.queryAll(By.css(".default-button-state"))[10];
+        let startTrackButton = de.queryAll(By.css(".btn"))[10];
         startTrackButton.nativeElement.click();
         fixture.detectChanges();
-
         expect(startTrackButton.classes['on-button-state']).toBeTruthy();
     });
 

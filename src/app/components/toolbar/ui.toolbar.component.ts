@@ -48,10 +48,22 @@ export class ToolbarComponent implements OnInit {
       if (args.type === 2) {
         this.graphTabClicked(args.tracking);
       }
+      if (args.type === 3) {
+        this.labelTabClicked();
+      }
     });
+    StoreUtils.graphTrackingEventEmitter.on("all_tabs_closed", (event) => {
+      this.disableAql();
+      this.disableClipboard();
+      this.disableTracking();
+    })
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.disableAql();
+    this.disableClipboard();
+    this.disableTracking();
+  }
 
   public aqlTabClicked(mode: AqlResultsView) {
     this.enableClipboard();
@@ -76,6 +88,12 @@ export class ToolbarComponent implements OnInit {
     if (tracking) {
       this.startTrack = ButtonState.On;
     }
+  }
+
+  public labelTabClicked() {
+    this.disableAql();
+    this.disableClipboard();
+    this.disableTracking();
   }
 
   public disableClipboard() {

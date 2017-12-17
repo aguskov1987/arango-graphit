@@ -1,54 +1,54 @@
 <div class="toolstrip">
-    <div [ngClass]="{'default-button-state': connectToServer == 1}" title="Connect to Server">
+    <div class="btn" [ngClass]="{'default-button-state': connectToServer == 1}" title="Connect to Server">
         <img src="../../../assets/Images/server-network.png" width="16" height="16">
     </div>
 
     <div class="menu-divider"></div>
 
-    <div [ngClass]="{'default-button-state': open == 1}" title="Open File">
+    <div class="btn" [ngClass]="{'default-button-state': open == 1}" title="Open File">
         <img src="../../../assets/Images/folder-open.png" width="17" height="13">
     </div>
-    <div [ngClass]="{'default-button-state': save == 1}" title="Save">
+    <div class="btn" [ngClass]="{'default-button-state': save == 1}" title="Save">
         <img src="../../../assets/Images/content-save.png" width="15" height="15">
     </div>
-    <div [ngClass]="{'default-button-state': saveAll == 1}" title="Save All">
+    <div class="btn" [ngClass]="{'default-button-state': saveAll == 1}" title="Save All">
         <img src="../../../assets/Images/content-save-all.png" width="17" height="17">
     </div>
 
     <div class="menu-divider"></div>
 
-    <div [ngClass]="{'default-button-state': cut == 1, 'disabled-button-state': cut == 0}" title="Cut">
+    <div class="btn" [ngClass]="{'default-button-state': cut == 1, 'disabled-button-state': cut == 0}" title="Cut">
         <img src="../../../assets/Images/content-cut.png" width="17" height="17">
     </div>
-    <div [ngClass]="{'default-button-state': copy == 1, 'disabled-button-state': copy == 0}" title="Copy">
+    <div class="btn" [ngClass]="{'default-button-state': copy == 1, 'disabled-button-state': copy == 0}" title="Copy">
         <img src="../../../assets/Images/content-copy.png" width="17" height="17">
     </div>
-    <div [ngClass]="{'default-button-state': paste == 1, 'disabled-button-state': paste == 0}" title="Paste">
+    <div class="btn" [ngClass]="{'default-button-state': paste == 1, 'disabled-button-state': paste == 0}" title="Paste">
         <img src="../../../assets/Images/content-paste.png" width="17" height="17">
     </div>
 
     <div class="menu-divider"></div>
 
-    <div [ngClass]="{'default-button-state': run == 1, 'disabled-button-state': run == 0}" title="Run Query"
+    <div class="btn" [ngClass]="{'default-button-state': run == 1, 'disabled-button-state': run == 0}" title="Run Query"
     (click)="buttonPressed('run_query')">
         <img src="../../../assets/Images/play.png" width="17" height="17">
     </div>
-    <div [ngClass]="{'default-button-state': tableView == 1, 'disabled-button-state': tableView == 0, 'on-button-state': tableView == 2}"
+    <div class="btn" [ngClass]="{'default-button-state': tableView == 1, 'disabled-button-state': tableView == 0, 'on-button-state': tableView == 2}"
     title="Table View">
         <img src="../../../assets/Images/table.png" width="17" height="17">
     </div>
-    <div [ngClass]="{'default-button-state': objView == 1, 'disabled-button-state': objView == 0, 'on-button-state': objView == 2}"
+    <div class="btn" [ngClass]="{'default-button-state': objView == 1, 'disabled-button-state': objView == 0, 'on-button-state': objView == 2}"
     title="JSON View">
         <img src="../../../assets/Images/code-braces.png" width="17" height="17">
     </div>
 
     <div class="menu-divider"></div>
 
-    <div [ngClass]="{'default-button-state': startTrack == 1, 'disabled-button-state': startTrack == 0, 'on-button-state': startTrack == 2}"
+    <div class="btn" [ngClass]="{'default-button-state': startTrack == 1, 'disabled-button-state': startTrack == 0, 'on-button-state': startTrack == 2}"
     title="Start Tracking" (click)="buttonPressed('start_tracking')">
         <img src="../../../assets/Images/video.png" width="17" height="17">
     </div>
-    <div [ngClass]="{'default-button-state': endTrack == 1, 'disabled-button-state': startTrack == 0}"
+    <div class="btn" [ngClass]="{'default-button-state': endTrack == 1, 'disabled-button-state': startTrack == 0}"
     title="End Tracking" (click)="buttonPressed('end_tracking')">
         <img src="../../../assets/Images/camera-iris.png" width="17" height="17">
     </div>

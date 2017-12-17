@@ -1,6 +1,7 @@
 import { ArangoDb } from "./types/arango_database.type";
 import { ArangoGraph } from "./types/arango_graph.type";
 import { Event } from "typescript.events";
+import { LabelMapping } from "app/common/types/label_mapping.type";
 
 export enum AppState {
   AqlEditor = 0,
@@ -23,10 +24,13 @@ export class StoreUtils {
 
   public static database_names: string[] = [];
   public static databases: ArangoDb[] = [];
+  public static labelMappings: LabelMapping[] = [];
 
   public static app_state: AppState = AppState.AqlEditor;
+
   public static globalEventEmitter: Event = new Event();
   public static graphTrackingEventEmitter: Event = new Event();
+
   public static query_run_clicked: string = "query_run_clicked";
   public static comment_code_clicked: string = "comment_code_clicked";
   public static start_tracking_clicked: string = "tracking_started_clicked";

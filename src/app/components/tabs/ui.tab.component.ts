@@ -6,7 +6,7 @@ export enum TabType {
   DbAQL = 0,
   GraphAQL = 1,
   GraphExplorer = 2,
-  Settings = 3,
+  GraphLabelMappings = 3,
   AddCollection = 4,
   AddRelation = 5,
 }

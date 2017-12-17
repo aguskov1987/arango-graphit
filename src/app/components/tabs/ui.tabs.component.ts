@@ -69,6 +69,10 @@ export class TabsComponent implements OnInit {
       this.addNewTab(TabType.GraphExplorer, command.database, command.graph);
       this.zone.run(() => {console.log("Graph Explorer Tab added")});
     });
+    this.electronService.ipcRenderer.on("open_label_mappings", (event, args) => {
+      this.addNewTab(TabType.GraphLabelMappings, "", "");
+      this.zone.run(() => {console.log("Label Mappings Tab added")});
+    })
 
     StoreUtils.globalEventEmitter.on(StoreUtils.start_tracking_clicked, (event) => {
       let args = event as any;
@@ -117,7 +121,7 @@ export class TabsComponent implements OnInit {
 
         StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === item.database);
         if (StoreUtils.currentDatabase != null) {
-          StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === item.graph);          
+          StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === item.graph);
         }
       }
     });
@@ -128,12 +132,17 @@ export class TabsComponent implements OnInit {
     this.arangoService.tabClosed(id);
     // deactivate all tabs
     this.items.forEach((item) => item.active = false);
+    if (this.items.length === 1) {
+      StoreUtils.graphTrackingEventEmitter.emit("all_tabs_closed");
+    }
 
     if (id === 0 && this.items.length > 1) {
       this.items[1].active = true;
+      StoreUtils.globalEventEmitter.emit("tab_clicked", this.items[1]);
     }
     else if (id > 0 && this.items.length > 1) {
       this.items[id - 1].active = true;
+      StoreUtils.globalEventEmitter.emit("tab_clicked", this.items[id - 1]);
     }
 
     // Remove the item

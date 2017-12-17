@@ -86,6 +86,18 @@ function createWindow() {
       submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' },
       { role: 'paste' }, { role: 'delete' }, { role: 'selectall' }
       ]
+    },
+    {
+      label: 'Preferences',
+      submenu: [
+        {label: 'Graph Label Mappings', click() {win.webContents.send("open_label_mappings")}}
+      ]
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {label: 'About GraphIt', click() {}}
+      ]
     }
   ];
 
