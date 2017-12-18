@@ -1,1 +1,36 @@
-labels
+<div class="maps-container">
+    <p-dropdown
+        [options]="maps"
+        [(ngModel)]="selectedMap"
+        optionLabel="dbName + ' ' + property"
+        [style]="{'width':'280px'}"
+        (onChange)="onChange($event.value)">
+    </p-dropdown>
+
+    <div class="spacer"></div>
+    <div>
+        <div class="header inline-el">Database</div>
+        <input class="inline-el" id="mapDbName" type="text" size="30" pInputText [(ngModel)]="dbName">
+    </div>
+
+    <div class="spacer"></div>
+    <div>
+        <div class="header inline-el">Property</div>
+        <input class="inline-el" id="mapProperty" type="text" size="30" pInputText [(ngModel)]="property">
+    </div>
+
+    <div class="spacer"></div>
+    <fieldset class="header">
+        <legend>Mappings</legend>
+        <div *ngFor ="let n of names">
+            <input class="inline-el" id="mapDbName" type="text" size="15" pInputText [(ngModel)]="n[0]">
+            <i class="inline-el fa fa-arrow-right"></i>
+            <input class="inline-el" id="mapDbName" type="text" size="15" pInputText [(ngModel)]="n[1]">
+            <i class="inline-el fa fa-close" (click)="remove(n)"></i>
+        </div>
+        <i class="inline-el fa fa-plus" (click)="add()"></i>
+    </fieldset>
+
+    <div class="spacer"></div>
+    <button (click)="save()">Save</button>
+</div>

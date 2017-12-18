@@ -57,6 +57,17 @@ function createWindow() {
   ipcMain.on("dbRightClicked", (event, args) => {
     contMenus.openDbContextMenu(args.x, args.y, args.command)
   })
+  ipcMain.on("getLabelMappings", (event, args) => {
+    if (store.has("label_mappings")) {
+      event.returnValue = store;
+    }
+    else {
+      event.returnValue = [];
+    }
+  })
+  ipcMain.on("setLabelMappings", (event, args) => {
+    store.set("label_mappings", args);
+  })
 
   // Open the DevTools.
   // Comment this one out if using VS Code debugging

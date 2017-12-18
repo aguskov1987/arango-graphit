@@ -18,7 +18,7 @@ import {TreeViewComponent} from './components/tree_view/ui.tree_view.component';
 import {AqlEditorComponent} from './components/aql_editor/ui.aql_editor.component';
 import {CodeHinterComponent} from './components/code_hinter/ui.code_hinter.component';
 import {GraphViewerComponent} from './components/graph_viewer/ui.graph_viewer.component';
-import {SharedModule, RadioButtonModule, SpinnerModule, InputTextModule, DataTableModule} from 'primeng/primeng';
+import {SharedModule, RadioButtonModule, SpinnerModule, InputTextModule, DataTableModule, DropdownModule} from 'primeng/primeng';
 import {AceEditorModule} from 'ng2-ace-editor';
 import {ArangoService} from './providers/arango.service';
 import { AppComponent } from './app.component';
@@ -53,6 +53,7 @@ import { LabelMappingsComponent } from 'app/components/app_settings/ui.label_map
     InputTextModule,
     SpinnerModule,
     RadioButtonModule,
+    DropdownModule,
     SharedModule,
   ],
   providers: [ElectronService, ArangoService],
