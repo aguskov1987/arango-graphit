@@ -59,7 +59,7 @@ function createWindow() {
   })
   ipcMain.on("getLabelMappings", (event, args) => {
     if (store.has("label_mappings")) {
-      event.returnValue = store;
+      event.returnValue = store.get("label_mappings");
     }
     else {
       event.returnValue = [];

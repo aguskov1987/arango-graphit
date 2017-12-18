@@ -38,3 +38,12 @@ body {
 .ui-state-active {
   background-color: #6550a4 !important;
 }
+
+.ui-dropdown-panel .ui-dropdown-list {
+  padding: 0 !important;
+  font-size: smaller !important;
+}
+
+.ui-state-highlight {
+  color: black !important;
+}

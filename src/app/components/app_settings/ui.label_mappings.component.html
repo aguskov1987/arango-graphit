@@ -2,7 +2,7 @@
     <p-dropdown
         [options]="maps"
         [(ngModel)]="selectedMap"
-        optionLabel="dbName + ' ' + property"
+        optionLabel="displayName"
         [style]="{'width':'280px'}"
         (onChange)="onChange($event.value)">
     </p-dropdown>

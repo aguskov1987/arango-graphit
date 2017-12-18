@@ -38,9 +38,37 @@ export class LabelMappingsComponent implements OnInit {
     }
 
     public save() {
+        let existing = this.maps.find((m) => m.dbName === this.dbName && m.property === this.property);
+
+        // If it is a new entry
+        if (existing == null) {
+            let newEntry = {dbName: this.dbName, property: this.property, displayName: this.dbName + " " + this.property, mappings: {}};
+            for (let n of this.names) {
+                newEntry.mappings[n[0]] = n[1];
+            }
+            this.maps.push(newEntry);
+        }
+        // If the entry already exists
+        else {
+            existing.dbName = this.dbName;
+            existing.property = this.property;
+            existing.displayName = this.dbName + " " + this.property;
+
+            existing.mappings = {};
+            for (let n of this.names) {
+                existing.mappings[n[0]] = n[1];
+            }
+        }
+        this.electronService.ipcRenderer.send("setLabelMappings", this.maps);
     }
 
     public onChange(mapping: LabelMapping) {
-        
+        this.dbName = mapping.dbName;
+        this.property = mapping.property;
+
+        this.names = [];
+        for (var key in mapping.mappings) {
+            this.names.push([key, mapping.mappings[key]]);
+        }
     }
 }
