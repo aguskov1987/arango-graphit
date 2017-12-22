@@ -3,4 +3,5 @@
  */
 export class ArangoGraph {
   public name : string = "";
+  public links: string[] = [];
 }

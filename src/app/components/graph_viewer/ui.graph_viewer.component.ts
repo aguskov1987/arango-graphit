@@ -75,7 +75,7 @@ export class GraphViewerComponent implements OnInit {
         });
 
         relsCursor.all().then((rels) => {
-          rels.forEach((rel) => {
+          rels[0].forEach((rel) => {
             if (rel != null) {
               let link = { data: { source: rel._from.replace("/", "_"), target: rel._to.replace("/", "_"), id: rel._id.replace("/", "_"), relation: rel } };
               this.data.push(link);
@@ -203,6 +203,7 @@ export class GraphViewerComponent implements OnInit {
   }
 
   private updateGraph(tabId: number) {
+    console.log(StoreUtils.currentGraph);
     this.arangoServer.stopTrackingGraph(tabId).subscribe((changes) => {
       if (changes == null || !changes.length || changes.length < 1) {
         return;
@@ -216,12 +217,12 @@ export class GraphViewerComponent implements OnInit {
 
   private updateRemovedEdges(): void {
     let removedRelations = this.dbChanges
-      .filter((change) => change.type === 2302 && change.data._from != null);
+      .filter((change) => change.type === 2302 && StoreUtils.currentGraph.links.some((l) => l === change.cname));
 
     let edges = this.cytoscapeContext.$("edge");
     if (edges.length && edges.length > 0) {
       edges.forEach((edge) => {
-        if (removedRelations.find((rel) => rel.data._from === edge.data()._from && rel.data._to === edge.data()._to) != null) {
+        if (removedRelations.find((rel) => rel.cname + "_" + rel.data._key === edge.data().id) != null) {
           edge.style("line-style", "dotted");
         }
       });
@@ -234,7 +235,7 @@ export class GraphViewerComponent implements OnInit {
     let nodeIds: string[] = this.data
       .filter((element) => element.data.document != null)
       .map((element) => element.data.document._id);
-    
+
     let relIds: string[] = this.data
       .filter((element) => element.data.relation != null)
       .map((element) => element.data.relation._id);
@@ -275,16 +276,16 @@ export class GraphViewerComponent implements OnInit {
               this.cytoscapeContext.add(link);
             }
           });
+
+          // Re-run the layout to position the nodes
+          let layout = this.cytoscapeContext.layout({
+            name: 'cose',
+            padding: 50,
+            componentSpacing: 100
+          });
+          layout.run();
         });
       })
-
-      // Re-run the layout to position the nodes
-      let layout = this.cytoscapeContext.layout({
-        name: 'cose',
-        padding: 50,
-        componentSpacing: 100
-      });
-      layout.run();
     })
   }
 

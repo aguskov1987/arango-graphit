@@ -89,13 +89,24 @@ export class AppComponent implements OnInit, AfterViewChecked {
                 color: "#359680",
               };
               db.subNodes.push(graphRow);
+              
               let graphDocCollections = new Set();
+
               for (let ed of g.edgeDefinitions) {
-                graphDocCollections.add(ed.from[0]);
-                graphDocCollections.add(ed.to[0]);
-                graphDocCollections.add(ed.from[1]);
-                graphDocCollections.add(ed.to[1]);
+                if (ed.from[0] != null) {
+                  graphDocCollections.add(ed.from[0]);
+                }
+                if (ed.to[0] != null) {
+                  graphDocCollections.add(ed.to[0]);
+                }
+                if (ed.from[1] != null) {
+                  graphDocCollections.add(ed.from[1]);
+                }
+                if (ed.to[1] != null) {
+                  graphDocCollections.add(ed.to[1]);
+                }
               }
+              
               for (let c of g.orphanCollections) {
                 graphDocCollections.add(c);
               }
@@ -130,6 +141,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
               let graph = new ArangoGraph();
               graph.name = g._key;
+              g.edgeDefinitions.forEach((ed) => {
+                graph.links.push(ed.collection);
+              });
               arangoDb.graphs.push(graph);
             }
           }
