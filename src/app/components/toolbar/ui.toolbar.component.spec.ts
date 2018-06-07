@@ -106,7 +106,7 @@ describe('Toolbar Component', () => {
     });
 
     it('should configure tool bar when a graph tab is activated', () => {
-        StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 2, id: 1, tracking: true});
+        // StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 2, id: 1, tracking: true});
         fixture.detectChanges();
         let de: DebugElement = fixture.debugElement;
         let buttons = de.queryAll(By.css(".default-button-state"));
@@ -119,7 +119,7 @@ describe('Toolbar Component', () => {
     });
 
     it('should re-configure the toolbar when the Start Tracking button is off and clicked', () => {
-        StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 2, id: 1, tracking: true});
+        // StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 2, id: 1, tracking: true});
         fixture.detectChanges();
         let de: DebugElement = fixture.debugElement;
         let startTrackButton = de.queryAll(By.css(".btn"))[10];
@@ -129,7 +129,7 @@ describe('Toolbar Component', () => {
     });
 
     it('should turn off tracking if enabled when the Stop Tracking button is clicked', () => {
-        StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 3, id: 1, tracking: true});
+        // StoreUtils.globalEventEmitter.emit("tab_clicked", {type: 3, id: 1, tracking: true});
         fixture.detectChanges();
         let de: DebugElement = fixture.debugElement;
         let stopTrackButton = de.queryAll(By.css(".toolstrip > div"))[15];

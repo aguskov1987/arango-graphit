@@ -138,10 +138,10 @@ export class ToolbarComponent implements OnInit {
   public buttonPressed(button: string) {
     switch (button) {
       case "run_query":
-        StoreUtils.globalEventEmitter.emit(StoreUtils.query_run_clicked);
+        EventHub.emit(new Event(EventType.RunQueryClicked));
         break;
       case "comment_code":
-        StoreUtils.globalEventEmitter.emit(StoreUtils.comment_code_clicked);
+        EventHub.emit(new Event(EventType.CommentCodeClicked));
         break;
       case "start_tracking":
         if (this.startTrack === ButtonState.Default) {

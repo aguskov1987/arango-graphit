@@ -68,14 +68,14 @@ function createWindow() {
   ipcMain.on("setLabelMappings", (event, args) => {
     store.set("label_mappings", args);
   })
-  ipcMain.on("openSaveFileDialog", () => {
+  ipcMain.on("openSaveFileDialog", (event) => {
     dialog.showSaveDialog(win, {}, (filename) => {
-      win.webContents.send("save_to_this_filename", filename)
+      event.returnValue = filename;
     })
   })
-  ipcMain.on("openLoadFileDialog", () => {
+  ipcMain.on("openLoadFileDialog", (event) => {
     dialog.showOpenDialog(win, {}, (filePath) => {
-      win.webContents.send("open_from_this_path", filePath)
+      event.returnValue = filePath;
     })
   })
 

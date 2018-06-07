@@ -25,9 +25,4 @@ export class StoreUtils {
   public static database_names: string[] = [];
   public static databases: ArangoDb[] = [];
   public static labelMappings: LabelMapping[] = [];
-
-  public static globalEventEmitter: Event = new Event();
-
-  public static query_run_clicked: string = "query_run_clicked";
-  public static comment_code_clicked: string = "comment_code_clicked";
 }

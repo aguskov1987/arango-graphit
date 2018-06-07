@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { StoreUtils } from "../../common/store";
 
 enum OptionType {
   Keyword,
@@ -42,6 +43,8 @@ export class CodeHinterComponent implements OnInit {
   }
 
   public updateOptionsList(input : string) {
+    this.populateCollectionOptions();
+    
     this.options = [];
     let keywords = this.keywordOptions.filter((k) => k.name.includes(input.toUpperCase()));
     this.options.push(...keywords);
@@ -129,14 +132,12 @@ export class CodeHinterComponent implements OnInit {
     }
   }
 
-  public populateDocOptions(docs : string[]) {
-    this.docCollectionOptions = docs.map((d) => {
+  public populateCollectionOptions() {
+    this.docCollectionOptions = StoreUtils.currentDatabase.doc_collections.map((d) => {
       return {name: d, selected: false, type: OptionType.DocumentCollection};
     });
-  }
 
-  public populateRelOptions(rels : string[]) {
-    this.relCollectionOptions = rels.map((r) => {
+    this.relCollectionOptions = StoreUtils.currentDatabase.rel_collections.map((r) => {
       return {name: r, selected: false, type: OptionType.RelationCollection};
     });
   }

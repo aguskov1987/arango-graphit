@@ -6,6 +6,7 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import { CodeHinterComponent } from "../code_hinter/ui.code_hinter.component";
 import { ArangoService } from "../../providers/arango.service";
 import { StoreUtils } from "../../common/store";
+import { EventHub, EventType } from '../../common/eventHub';
 
 @Component({
     moduleId: module.id,
@@ -42,29 +43,15 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
       this.clearBindings();
     });
 
-    StoreUtils.globalEventEmitter.on(StoreUtils.query_run_clicked, () => {
-      if (!this.active) {
-        return;
-      }
-      this.arangoService.executeAqlQuery(this.text).then((cursor) => {
-        cursor.all().then((items) => {
-          this.queryResult = items;
-        });
-      }).catch((error) => {
-        console.log(error);
-      });
-    });
-
-    StoreUtils.globalEventEmitter.on(StoreUtils.comment_code_clicked, () => {
-      this.editor.toggleCommentLines();
-    });
+    EventHub.subscribe(this, 'handleQueryRun', EventType.RunQueryClicked);
+    EventHub.subscribe(this, 'handleCommentCode', EventType.CommentCodeClicked);
   }
 
   ngAfterViewInit(): void {
     let Split = require("split.js");
     Split(["#aqlCodeEditor" + this.id, "#aqlResultPanel" + this.id], {direction : "vertical", sizes: [50, 50]});
   }
-// .parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
+
   public captureCursorPosition() : [string, string] {
     let bodyRect = document.body.getBoundingClientRect();
     let cursor = document.getElementById("aqlCodeEditor" + this.id).getElementsByClassName("ace_cursor")[0];
@@ -188,4 +175,20 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private handleQueryRun() {
+    if (!this.active) {
+      return;
+    }
+    this.arangoService.executeAqlQuery(this.text).then((cursor) => {
+      cursor.all().then((items) => {
+        this.queryResult = items;
+      });
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  private handleCommentCode() {
+    this.editor.toggleCommentLines();
+  }
 }

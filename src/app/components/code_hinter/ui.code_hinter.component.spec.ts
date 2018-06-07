@@ -31,16 +31,14 @@ describe('Code Hinter Component', () => {
     });
 
     it('should populate document and relation collections', () => {
-        component.populateDocOptions(["Cars", "Engines"]);
-        component.populateRelOptions(["Car has engine"]);
+        component.populateCollectionOptions();
 
         expect((<any>component).docCollectionOptions.length).toEqual(2);
         expect((<any>component).relCollectionOptions.length).toEqual(1);
     });
 
     it('should only show compatable options when given a string to compare to', () => {
-        component.populateDocOptions(["Cars", "Engines"]);
-        component.populateRelOptions(["Car has engine"]);
+        component.populateCollectionOptions();
         component.addVariableOption("variable");
         component.updateOptionsList("IN");
         fixture.detectChanges();
