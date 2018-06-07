@@ -11,7 +11,7 @@ import { TreeViewNodeComponent } from "./components/tree_view/ui.tree_view_node.
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnInit, AfterViewChecked {
+export class AppComponent implements OnInit {
   public appState : AppState = AppState.GraphEditor;
   public tree : ITreeViewItem;
   private service : ArangoService;
@@ -34,7 +34,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
   public ngOnInit(): void {
     let Split = require("split.js");
     Split(["#arangoTree", "#arangoContent"], {direction : "horizontal", sizes: [20, 80]});
-
     this.service.loadDatabaseNames().then((names) => {
       if (!names.length || names.length < 1) {
         return;
@@ -147,10 +146,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
         }
       }
     });
-  }
-
-  public ngAfterViewChecked() : void {
-    this.appState = StoreUtils.app_state;
   }
 
   public onNodeRightClick(node : TreeViewNodeComponent) {

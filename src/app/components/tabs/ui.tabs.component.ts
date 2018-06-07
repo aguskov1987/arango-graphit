@@ -7,6 +7,7 @@ import { Command } from "app/common/types/command.type";
 import { StoreUtils } from "app/common/store";
 import { AqlResultsView } from "app/components/toolbar/ui.toolbar.component";
 import { ArangoService } from "app/providers/arango.service";
+import { EventHub, Event, EventType } from "../../common/eventHub";
 
 export interface ITabItem {
   id : number;
@@ -74,18 +75,8 @@ export class TabsComponent implements OnInit {
       this.zone.run(() => {console.log("Label Mappings Tab added")});
     })
 
-    StoreUtils.globalEventEmitter.on(StoreUtils.start_tracking_clicked, (event) => {
-      let args = event as any;
-      if (this.items.length && this.items.length > 0) {
-        this.items.find((item) => item.id === args.id).active = true;        
-      }
-    });
-    StoreUtils.globalEventEmitter.on(StoreUtils.end_tracking_clicked, (event) => {
-      let args = event as any;
-      if (this.items.length && this.items.length > 0) {
-        this.items.find((item) => item.id === args.id).active = false;        
-      }
-    });
+    EventHub.subscribe(this, 'handleStartTracking', EventType.StartTrackingGraph)
+    EventHub.subscribe(this, 'handleEndTracking', EventType.EndTrackingGraph)
   }
 
   public ngOnInit() {
@@ -104,7 +95,7 @@ export class TabsComponent implements OnInit {
       aqlResultsMode: AqlResultsView.Json,
       tracking: false
     });
-    StoreUtils.globalEventEmitter.emit("tab_clicked", this.items[this.items.length - 1]);
+    EventHub.emit(new Event(EventType.TabClicked, this.items[this.items.length - 1]))
 
     // Set the names of the current database and graphs
     StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === database);
@@ -117,7 +108,7 @@ export class TabsComponent implements OnInit {
     this.items.forEach((item) => {
       item.active = item.id === id;
       if (item.active) {
-        StoreUtils.globalEventEmitter.emit("tab_clicked", item);
+        EventHub.emit(new Event(EventType.TabClicked, item))
 
         StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === item.database);
         if (StoreUtils.currentDatabase != null) {
@@ -133,16 +124,16 @@ export class TabsComponent implements OnInit {
     // deactivate all tabs
     this.items.forEach((item) => item.active = false);
     if (this.items.length === 1) {
-      StoreUtils.graphTrackingEventEmitter.emit("all_tabs_closed");
+      EventHub.emit(new Event(EventType.TabsClosed));
     }
 
     if (id === 0 && this.items.length > 1) {
       this.items[1].active = true;
-      StoreUtils.globalEventEmitter.emit("tab_clicked", this.items[1]);
+      EventHub.emit(new Event(EventType.TabClicked, this.items[1]));
     }
     else if (id > 0 && this.items.length > 1) {
       this.items[id - 1].active = true;
-      StoreUtils.globalEventEmitter.emit("tab_clicked", this.items[id - 1]);
+      EventHub.emit(new Event(EventType.TabClicked, this.items[id - 1]));
     }
 
     // Remove the item
@@ -154,5 +145,19 @@ export class TabsComponent implements OnInit {
         item.id = counter;
         counter++;
       });
+  }
+
+  private handleStartTracking(event: any) {
+    let args = event as any;
+    if (this.items.length && this.items.length > 0) {
+      this.items.find((item) => item.id === args.id).active = true;
+    }
+  }
+
+  private handleEndTracking(event: any) {
+    let args = event as any;
+    if (this.items.length && this.items.length > 0) {
+      this.items.find((item) => item.id === args.id).active = false;        
+    }
   }
 }

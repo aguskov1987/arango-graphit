@@ -1,7 +1,8 @@
 import { StoreUtils } from '../../common/store';
 import { Component, OnInit } from '@angular/core';
-import { Event, IListener } from 'typescript.events';
 import { TabType } from 'app/components/tabs/ui.tab.component';
+import { Event, EventHub, EventType } from '../../common/eventHub';
+import { ElectronService } from '../../providers/electron.service';
 
 export enum AqlResultsView {
   Table,
@@ -37,26 +38,30 @@ export class ToolbarComponent implements OnInit {
   public startTrack: ButtonState = ButtonState.Default;
   public endTrack: ButtonState = ButtonState.Default;
 
-  constructor() {
-    StoreUtils.globalEventEmitter.on("tab_clicked", (event) => {
-      let args = event as any;
-      this.currentTabId = args.id;
-      this.currentTabType = args.type;
-      if (args.type === 0 || args.type === 1) {
-        this.aqlTabClicked(args.aqlResultsMode);
-      }
-      if (args.type === 2) {
-        this.graphTabClicked(args.tracking);
-      }
-      if (args.type === 3) {
-        this.labelTabClicked();
-      }
-    });
-    StoreUtils.graphTrackingEventEmitter.on("all_tabs_closed", (event) => {
-      this.disableAql();
-      this.disableClipboard();
-      this.disableTracking();
-    })
+  constructor(es: ElectronService) {
+    EventHub.subscribe(this, 'tabClickedHandler', EventType.TabClicked);
+    EventHub.subscribe(this, 'tabsClosedHandler', EventType.TabsClosed)
+  }
+
+  tabClickedHandler(event: any) {
+    let args = event as any;
+    this.currentTabId = args.id;
+    this.currentTabType = args.type;
+    if (args.type === 0 || args.type === 1) {
+      this.aqlTabClicked(args.aqlResultsMode);
+    }
+    if (args.type === 2) {
+      this.graphTabClicked(args.tracking);
+    }
+    if (args.type === 3) {
+      this.labelTabClicked();
+    }
+  }
+
+  tabsClosedHandler() {
+    this.disableAql();
+    this.disableClipboard();
+    this.disableTracking();
   }
 
   ngOnInit() {
@@ -140,16 +145,20 @@ export class ToolbarComponent implements OnInit {
         break;
       case "start_tracking":
         if (this.startTrack === ButtonState.Default) {
-          StoreUtils.globalEventEmitter.emit(StoreUtils.start_tracking_clicked, {id: this.currentTabId});
+          EventHub.emit(new Event(EventType.StartTrackingGraph, {id: this.currentTabId}));
           this.startTrack = ButtonState.On;  
         }
         break;
       case "end_tracking":
         if (this.startTrack === ButtonState.On) {
-          StoreUtils.graphTrackingEventEmitter.emit(StoreUtils.end_tracking_clicked, {id: this.currentTabId});
+          EventHub.emit(new Event(EventType.EndTrackingGraph, {id: this.currentTabId}));
           this.startTrack = ButtonState.Default;
         }
         break;
+      case "save":
+        EventHub.emit(new Event(EventType.SaveClicked))
+      case "open_file":
+        EventHub.emit(new Event(EventType.OpenClicked))
       default:
         return;
     }

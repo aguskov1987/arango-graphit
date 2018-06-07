@@ -17,7 +17,7 @@ export enum ArangoType {
 export class StoreUtils {
   public static host: string = "http://localhost:8529";
   public static username: string = "root";
-  public static password: string = "gskv9988";
+  public static password: string = "Tnln1601";
 
   public static currentDatabase: ArangoDb = null;
   public static currentGraph: ArangoGraph = null;
@@ -26,13 +26,8 @@ export class StoreUtils {
   public static databases: ArangoDb[] = [];
   public static labelMappings: LabelMapping[] = [];
 
-  public static app_state: AppState = AppState.AqlEditor;
-
   public static globalEventEmitter: Event = new Event();
-  public static graphTrackingEventEmitter: Event = new Event();
 
   public static query_run_clicked: string = "query_run_clicked";
   public static comment_code_clicked: string = "comment_code_clicked";
-  public static start_tracking_clicked: string = "tracking_started_clicked";
-  public static end_tracking_clicked: string = "tracking_ended_clicked";
 }

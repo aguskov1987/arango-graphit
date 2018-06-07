@@ -3,6 +3,7 @@ import { ArangoService, IDbChange } from "../../providers/arango.service";
 import * as chroma from "chroma-js";
 import { StoreUtils } from "app/common/store";
 import { DiffPatcher } from "jsondiffpatch";
+import { EventHub, EventType } from "../../common/eventHub";
 
 @Component({
   moduleId: module.id,
@@ -30,18 +31,8 @@ export class GraphViewerComponent implements OnInit {
     this.arangoServer = aService;
     this.patcher = new DiffPatcher();
 
-    StoreUtils.globalEventEmitter.on(StoreUtils.start_tracking_clicked, (event) => {
-      let args = event as any;
-      if (this.id === args.id) {
-        this.arangoServer.startTrackingGraph(args.id);
-      }
-    });
-    StoreUtils.graphTrackingEventEmitter.on(StoreUtils.end_tracking_clicked, (event) => {
-      let args = event as any;
-      if (this.id === args.id) {
-        this.updateGraph(args.id);
-      }
-    })
+    EventHub.subscribe(this, 'handleStartTracking', EventType.StartTrackingGraph);
+    EventHub.subscribe(this, 'handleEndTracking', EventType.StartTrackingGraph);
   }
 
   public ngOnInit() {
@@ -313,6 +304,20 @@ export class GraphViewerComponent implements OnInit {
           element.data().changesVisible = false;
         }
       }
+    }
+  }
+
+  private handleStartTracking(event: any) {
+    let args = event as any;
+    if (this.id === args.id) {
+      this.arangoServer.startTrackingGraph(args.id);
+    }
+  }
+
+  private handleEndTracking(event: any) {
+    let args = event as any;
+    if (this.id === args.id) {
+      this.updateGraph(args.id);
     }
   }
 }

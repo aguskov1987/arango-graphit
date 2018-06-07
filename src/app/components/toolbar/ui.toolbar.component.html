@@ -5,13 +5,13 @@
 
     <div class="menu-divider"></div>
 
-    <div class="btn" [ngClass]="{'default-button-state': open == 1}" title="Open File">
+    <div class="btn" [ngClass]="{'default-button-state': open == 1}" title="Open File" (click)="buttonPressed('open_file')">
         <img src="../../../assets/Images/folder-open.png" width="17" height="13">
     </div>
-    <div class="btn" [ngClass]="{'default-button-state': save == 1}" title="Save">
+    <div class="btn" [ngClass]="{'default-button-state': save == 1}" title="Save" (click)="buttonPressed('save')">
         <img src="../../../assets/Images/content-save.png" width="15" height="15">
     </div>
-    <div class="btn" [ngClass]="{'default-button-state': saveAll == 1}" title="Save All">
+    <div class="btn" [ngClass]="{'default-button-state': saveAll == 1}" title="Save All" (click)="buttonPressed('save_all')">
         <img src="../../../assets/Images/content-save-all.png" width="17" height="17">
     </div>
 

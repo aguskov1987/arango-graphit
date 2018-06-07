@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, Menu, ipcMain, Point, dialog } from "electron";
+import { app, BrowserWindow, screen, Menu, ipcMain, dialog } from "electron";
 import * as path from 'path';
 import { ContextMenus } from "./context_menus";
 
@@ -67,6 +67,16 @@ function createWindow() {
   })
   ipcMain.on("setLabelMappings", (event, args) => {
     store.set("label_mappings", args);
+  })
+  ipcMain.on("openSaveFileDialog", () => {
+    dialog.showSaveDialog(win, {}, (filename) => {
+      win.webContents.send("save_to_this_filename", filename)
+    })
+  })
+  ipcMain.on("openLoadFileDialog", () => {
+    dialog.showOpenDialog(win, {}, (filePath) => {
+      win.webContents.send("open_from_this_path", filePath)
+    })
   })
 
   // Open the DevTools.
