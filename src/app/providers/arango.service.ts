@@ -91,7 +91,7 @@ export class ArangoService {
     let graph = StoreUtils.currentGraph.name;
 
     let filter = this.buildFilter(excludes, "e");
-    let query = `FOR v, e IN 1..${depth} ${dir} '${nodeId}' GRAPH '${graph}' ${filter} RETURN e`;
+    let query = `RETURN UNIQUE(FOR v, e IN 1..${depth} ${dir} '${nodeId}' GRAPH '${graph}' ${filter} RETURN e)`;
     return this.connector.query(query);
   }
 
