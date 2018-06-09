@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, Input, OnInit, QueryList, ViewChildren, NgZone } from "@angular/core";
-
+import { Component, Input, OnInit, QueryList, ViewChildren, NgZone } from "@angular/core";
+import * as fs from 'fs';
 import { TabType, TabComponent } from "./ui.tab.component";
 import { TabContentComponent } from "./ui.tabContent.component";
 import { ElectronService } from "app/providers/electron.service";
@@ -10,11 +10,11 @@ import { ArangoService } from "app/providers/arango.service";
 import { EventHub, Event, EventType } from "../../common/eventHub";
 
 export interface ITabItem {
-  id : number;
-  type : TabType;
+  id: number;
+  type: TabType;
   active: boolean;
-  database : string;
-  graph : string;
+  database: string;
+  graph: string;
 
   aqlResultsMode: AqlResultsView;
   tracking: boolean;
@@ -36,18 +36,19 @@ export interface ITabItem {
     
     .tabs-content {
       flex: 1 1 auto;
-      height: calc(100% - 32px);
+      height: calc(100% - 59px);
     }
   `],
 })
 export class TabsComponent implements OnInit {
-  @Input() public items : ITabItem[] = [];
+  @Input() public items: ITabItem[] = [];
 
-  @ViewChildren(TabComponent) public tabs : QueryList<TabComponent>;
-  @ViewChildren(TabContentComponent) public windows : QueryList<TabContentComponent>;
+  @ViewChildren(TabComponent) public tabs: QueryList<TabComponent>;
+  @ViewChildren(TabContentComponent) public windows: QueryList<TabContentComponent>;
 
   private electronService: ElectronService;
   private arangoService: ArangoService;
+  private fileService = fs;
   private zone: NgZone;
 
   constructor(es: ElectronService, z: NgZone, as: ArangoService) {
@@ -56,33 +57,40 @@ export class TabsComponent implements OnInit {
     this.zone = z;
 
     this.electronService.ipcRenderer.on("open_db_query_msg", (event, args) => {
-      let command = args as Command; 
+      let command = args as Command;
       this.addNewTab(TabType.DbAQL, command.database, command.graph);
-      this.zone.run(() => {console.log("Db AQL Tab added")});
+      this.zone.run(() => { console.log("Db AQL Tab added") });
     });
     this.electronService.ipcRenderer.on("open_graph_query_msg", (event, args) => {
       let command = args as Command;
       this.addNewTab(TabType.GraphAQL, command.database, command.graph);
-      this.zone.run(() => {console.log("Graph AQL Tab added")});
+      this.zone.run(() => { console.log("Graph AQL Tab added") });
     });
     this.electronService.ipcRenderer.on("open_obj_explorer_msg", (event, args) => {
       let command = args as Command;
       this.addNewTab(TabType.GraphExplorer, command.database, command.graph);
-      this.zone.run(() => {console.log("Graph Explorer Tab added")});
+      this.zone.run(() => { console.log("Graph Explorer Tab added") });
     });
     this.electronService.ipcRenderer.on("open_label_mappings", (event, args) => {
       this.addNewTab(TabType.GraphLabelMappings, "", "");
-      this.zone.run(() => {console.log("Label Mappings Tab added")});
+      this.zone.run(() => { console.log("Label Mappings Tab added") });
     })
 
-    EventHub.subscribe(this, 'handleStartTracking', EventType.StartTrackingGraph)
-    EventHub.subscribe(this, 'handleEndTracking', EventType.EndTrackingGraph)
+    EventHub.subscribe(this, 'handleStartTracking', EventType.StartTrackingGraph);
+    EventHub.subscribe(this, 'handleEndTracking', EventType.EndTrackingGraph);
+    EventHub.subscribe(this, 'handleOpenFile', EventType.OpenClicked);
   }
 
   public ngOnInit() {
   }
 
   public addNewTab(type: TabType, database: string, graph: string) {
+    // Set the names of the current database and graphs
+    StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === database);
+    if (StoreUtils.currentDatabase != null) {
+      StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === graph);
+    }
+    
     this.items.forEach((item) => item.active = false);
 
     let nextTabId = this.items.length < 1 ? 0 : this.items.length;
@@ -93,18 +101,13 @@ export class TabsComponent implements OnInit {
       database: database,
       active: true,
       aqlResultsMode: AqlResultsView.Json,
-      tracking: false
+      tracking: false,
     });
+    this.zone.run(() => { console.log("Tab added") });
     EventHub.emit(new Event(EventType.TabClicked, this.items[this.items.length - 1]))
-
-    // Set the names of the current database and graphs
-    StoreUtils.currentDatabase = StoreUtils.databases.find((db) => db.name === database);
-    if (StoreUtils.currentDatabase != null) {
-      StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === graph);      
-    }
   }
 
-  public tabClicked(id : number) {
+  public tabClicked(id: number) {
     this.items.forEach((item) => {
       item.active = item.id === id;
       if (item.active) {
@@ -118,7 +121,7 @@ export class TabsComponent implements OnInit {
     });
   }
 
-  public tabCloseClicked(id : number) {
+  public tabCloseClicked(id: number) {
     // Notify the arango service so it would re-adjust the tracking records
     this.arangoService.tabClosed(id);
     // deactivate all tabs
@@ -142,9 +145,21 @@ export class TabsComponent implements OnInit {
     // Reset the ids of the tabs and windows too
     let counter: number = 0;
     this.items.forEach((item) => {
-        item.id = counter;
-        counter++;
-      });
+      item.id = counter;
+      counter++;
+    });
+  }
+
+  private handleOpenFile() {
+    let filename = this.electronService.ipcRenderer.sendSync("openLoadFileDialog");
+    if (filename && filename.length == 1) {
+      this.fileService.readFile(filename[0], (error, data) => {
+        this.addNewTab(TabType.GraphAQL, "", "")
+        window.setTimeout(() => {
+          EventHub.emit(new Event(EventType.AqlPopulation, data.toString()))
+        }, 500);
+      })
+    }
   }
 
   private handleStartTracking(event: any) {
@@ -157,7 +172,7 @@ export class TabsComponent implements OnInit {
   private handleEndTracking(event: any) {
     let args = event as any;
     if (this.items.length && this.items.length > 0) {
-      this.items.find((item) => item.id === args.id).active = false;        
+      this.items.find((item) => item.id === args.id).active = false;
     }
   }
 }

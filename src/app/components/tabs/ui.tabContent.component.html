@@ -1,4 +1,10 @@
 <div class="content" [hidden]="!active">
+  <div class="datasource">
+    Database: <p-dropdown [options]="databases" [(ngModel)]="database"
+      [style]="{'width':'280px'}" (onChange)="onDbChange($event.value)"></p-dropdown>
+    Graph: <p-dropdown [options]="graphs" [(ngModel)]="graph"
+    [style]="{'width':'280px'}" (onChange)="onGraphChange($event.value)"></p-dropdown>
+  </div>
   <aql-editor *ngIf="type === 0 || type === 1" [id]="id" [active]="active"></aql-editor>
   <graph-obj-explorer *ngIf="type === 2" [id]="id"></graph-obj-explorer>
   <label-mappings *ngIf="type === 3"></label-mappings>

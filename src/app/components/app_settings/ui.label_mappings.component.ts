@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { LabelMapping } from 'app/common/types/label_mapping.type';
-import { SelectItem } from 'primeng/primeng';
 import { ElectronService } from 'app/providers/electron.service';
 
 @Component({

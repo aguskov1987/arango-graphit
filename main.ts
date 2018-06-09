@@ -1,6 +1,7 @@
 import { app, BrowserWindow, screen, Menu, ipcMain, dialog } from "electron";
 import * as path from 'path';
-import { ContextMenus } from "./context_menus";
+import { ContextMenus } from "./main_helpers/context_menus";
+import { TopMenu } from "./main_helpers/top_menu";
 
 // user preferences and other data persistence
 const Store = require("electron-store");
@@ -49,14 +50,16 @@ function createWindow() {
   win.on("unmaximize", () => max = false);
 
   // Register context menus
-  let contMenus = new ContextMenus(win);
+  let contextMenus = new ContextMenus(win);
   // args is of type Command (common -> command.type.ts)
   ipcMain.on("graphRightClicked", (event, args) => {
-    contMenus.openGraphContextMenu(args.x, args.y, args.command)
+    contextMenus.openGraphContextMenu(args.x, args.y, args.command)
   })
   ipcMain.on("dbRightClicked", (event, args) => {
-    contMenus.openDbContextMenu(args.x, args.y, args.command)
+    contextMenus.openDbContextMenu(args.x, args.y, args.command)
   })
+
+  // Mappings
   ipcMain.on("getLabelMappings", (event, args) => {
     if (store.has("label_mappings")) {
       event.returnValue = store.get("label_mappings");
@@ -68,14 +71,26 @@ function createWindow() {
   ipcMain.on("setLabelMappings", (event, args) => {
     store.set("label_mappings", args);
   })
+
+  // Open/save files
   ipcMain.on("openSaveFileDialog", (event) => {
     dialog.showSaveDialog(win, {}, (filename) => {
-      event.returnValue = filename;
+      if (filename != null) {
+        event.returnValue = filename;
+      }
+      else {
+        event.returnValue = '';
+      }
     })
   })
   ipcMain.on("openLoadFileDialog", (event) => {
     dialog.showOpenDialog(win, {}, (filePath) => {
-      event.returnValue = filePath;
+      if (filePath != null) {
+        event.returnValue = filePath;
+      }
+      else {
+        event.returnValue = '';
+      }
     })
   })
 
@@ -85,44 +100,7 @@ function createWindow() {
     win.webContents.openDevTools();
   }
 
-  let menuTemplate: any = [
-    {
-      label: "File",
-      submenu: [
-        { label: "Open", click() {} },
-        { label: "Open Recent", click() { } },
-        { type: 'separator' },
-        {
-          label: "Save", accelerator: "CommandOrControl+S", click() {
-            dialog.showSaveDialog(win, {})
-          }
-        },
-        { label: "Save All", accelerator: "CommandOrControl+Shift+S", click() { } },
-        { type: 'separator' },
-        { role: 'close' }
-      ]
-    },
-    {
-      label: 'Edit',
-      submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' },
-      { role: 'paste' }, { role: 'delete' }, { role: 'selectall' }
-      ]
-    },
-    {
-      label: 'Preferences',
-      submenu: [
-        {label: 'Graph Label Mappings', click() {win.webContents.send("open_label_mappings")}}
-      ]
-    },
-    {
-      label: 'Help',
-      submenu: [
-        {label: 'About GraphIt', click() {}}
-      ]
-    }
-  ];
-
-  const menu = Menu.buildFromTemplate(menuTemplate);
+  const menu = Menu.buildFromTemplate(TopMenu.getMenu(win));
   Menu.setApplicationMenu(menu);
 
   // Emitted when the window is closed.

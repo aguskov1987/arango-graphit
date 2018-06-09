@@ -1,6 +1,9 @@
 import { Component, Input, OnInit, ViewChild, OnChanges, SimpleChanges } from "@angular/core";
+import {SelectItem} from 'primeng/primeng';
+
 import { TabType } from "./ui.tab.component";
 import { AqlEditorComponent } from "app/components/aql_editor/ui.aql_editor.component";
+import { StoreUtils } from "../../common/store";
 
 @Component({
   moduleId: module.id,
@@ -11,6 +14,12 @@ import { AqlEditorComponent } from "app/components/aql_editor/ui.aql_editor.comp
       height: 100%;
       background-color: #2b2b2b;
     }
+    .datasource {
+      color: whitesmoke;
+      font-weight: 100;
+      font-size: smaller;
+      padding: 5px;
+    }
   `],
 })
 export class TabContentComponent implements OnInit, OnChanges {
@@ -18,9 +27,16 @@ export class TabContentComponent implements OnInit, OnChanges {
   @Input() public id: number = 0;
   @Input() public type: TabType;
   @Input() public active: boolean = false;
+  @Input() public database = null;
+  @Input() public graph = null;
   @ViewChild(AqlEditorComponent) private aqlEditor: AqlEditorComponent;
 
+  public databases = [];
+  public graphs = [];
+
   constructor() {
+    this.databases = StoreUtils.databases.map(db => {return {label: db.name, value: db.name}});
+    this.graphs = StoreUtils.currentDatabase.graphs.map(g => {return {label: g.name, value: g.name}});
   }
 
   public ngOnInit() {
@@ -39,5 +55,14 @@ export class TabContentComponent implements OnInit, OnChanges {
         }
       }, 1000)
     }
+  }
+
+  public onDbChange(db) {
+    StoreUtils.currentDatabase = StoreUtils.databases.find((d) => d.name === db);
+    this.graphs = StoreUtils.currentDatabase.graphs.map(g => {return {label: g.name, value: g.name}});
+  }
+
+  public onGraphChange(gr) {
+    StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === gr);
   }
 }

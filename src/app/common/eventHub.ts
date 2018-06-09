@@ -9,7 +9,9 @@ export enum EventType {
     RunQueryClicked = 5,
     SaveClicked = 6,
     SaveAllClicked = 7,
-    OpenClicked = 8
+    OpenClicked = 8,
+
+    AqlPopulation = 9
 }
 export class Event {
     constructor(type: EventType, args: any = null) {

@@ -17,7 +17,7 @@ export enum ArangoType {
 export class StoreUtils {
   public static host: string = "http://localhost:8529";
   public static username: string = "root";
-  public static password: string = "Tnln1601";
+  public static password: string = "gskv9988";
 
   public static currentDatabase: ArangoDb = null;
   public static currentGraph: ArangoGraph = null;

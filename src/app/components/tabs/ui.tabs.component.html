@@ -1,8 +1,21 @@
 <div class="tabs-header">
-  <tab *ngFor="let item of items" [title]="item.database" [database]="item.database" [graph]="item.graph" [tabType]="item.type"
-    [active]="item.active" [id]="item.id" (clicked)="tabClicked($event)" (closeClicked)="tabCloseClicked($event)">
+  <tab *ngFor="let item of items"
+    [title]="item.database"
+    [database]="item.database"
+    [graph]="item.graph"
+    [tabType]="item.type"
+    [active]="item.active"
+    [id]="item.id"
+    (clicked)="tabClicked($event)"
+    (closeClicked)="tabCloseClicked($event)">
   </tab>
 </div>
 <div class="tabs-content">
-  <tab-content *ngFor="let item of items" [id]="item.id" [type]="item.type" [active]="item.active"></tab-content>
+  <tab-content *ngFor="let item of items"
+    [id]="item.id"
+    [type]="item.type"
+    [active]="item.active"
+    [database]="item.database"
+    [graph]="item.graph">
+  </tab-content>
 </div>

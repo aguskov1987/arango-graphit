@@ -53,11 +53,11 @@ export class CodeHinterComponent implements OnInit {
     this.options.push(...funcs);
 
     if (this.docCollectionOptions.length && this.docCollectionOptions.length > 0) {
-      let docs = this.docCollectionOptions.filter((d) => d.name.includes(input.toUpperCase()));
+      let docs = this.docCollectionOptions.filter((d) => d.name.includes(input));
       this.options.push(...docs);
     }
     if (this.relCollectionOptions.length && this.relCollectionOptions.length > 0) {
-      let rels = this.relCollectionOptions.filter((r) => r.name.includes(input.toUpperCase()));
+      let rels = this.relCollectionOptions.filter((r) => r.name.includes(input));
       this.options.push(...rels);
     }
     if (this.localVariableOptions.length && this.localVariableOptions.length > 0) {

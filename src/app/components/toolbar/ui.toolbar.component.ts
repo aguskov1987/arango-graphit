@@ -1,4 +1,3 @@
-import { StoreUtils } from '../../common/store';
 import { Component, OnInit } from '@angular/core';
 import { TabType } from 'app/components/tabs/ui.tab.component';
 import { Event, EventHub, EventType } from '../../common/eventHub';
@@ -156,9 +155,11 @@ export class ToolbarComponent implements OnInit {
         }
         break;
       case "save":
-        EventHub.emit(new Event(EventType.SaveClicked))
+        EventHub.emit(new Event(EventType.SaveClicked));
+        break;
       case "open_file":
-        EventHub.emit(new Event(EventType.OpenClicked))
+        EventHub.emit(new Event(EventType.OpenClicked));
+        break;
       default:
         return;
     }

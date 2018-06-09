@@ -1,12 +1,10 @@
-/**
- * Created by Andrey on 10/4/2017.
- */
+import * as fs from 'fs';
 import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, isDevMode, HostListener, Input } from '@angular/core';
 import { AceEditorComponent } from "ng2-ace-editor";
 import { CodeHinterComponent } from "../code_hinter/ui.code_hinter.component";
 import { ArangoService } from "../../providers/arango.service";
-import { StoreUtils } from "../../common/store";
 import { EventHub, EventType } from '../../common/eventHub';
+import { ElectronService } from '../../providers/electron.service';
 
 @Component({
     moduleId: module.id,
@@ -16,10 +14,11 @@ import { EventHub, EventType } from '../../common/eventHub';
 export class AqlEditorComponent implements OnInit, AfterViewInit {
   @Input() public id: number;
   @Input() public active: boolean = false;
+  @Input() public text = "";
   @ViewChild("editor") public editorComponent : AceEditorComponent;
   @ViewChild("hinter") public codeHinter : CodeHinterComponent;
 
-  public text = "";
+  public savedPath = "";
   public queryResult : any[] = [];
   public tabId : number;
 
@@ -27,12 +26,21 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
   private editor : any;
   private hinterOn : boolean = false;
   private hinterJustClicked : boolean = false;
+
   private renderer : Renderer2;
   private arangoService : ArangoService;
+  private electronService: ElectronService;
+  private fileService = fs;
 
-  constructor(r : Renderer2, as : ArangoService) {
+  constructor(r : Renderer2, as : ArangoService, es: ElectronService) {
     this.renderer = r;
     this.arangoService = as;
+    this.electronService = es;
+
+    EventHub.subscribe(this, 'handleTextInput', EventType.AqlPopulation)
+    EventHub.subscribe(this, 'handleQueryRun', EventType.RunQueryClicked);
+    EventHub.subscribe(this, 'handleCommentCode', EventType.CommentCodeClicked);
+    EventHub.subscribe(this, 'handleSaveQuery', EventType.SaveClicked);
   }
 
   public ngOnInit() : void {
@@ -42,9 +50,6 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
       this.codeHinter.hideHinter();
       this.clearBindings();
     });
-
-    EventHub.subscribe(this, 'handleQueryRun', EventType.RunQueryClicked);
-    EventHub.subscribe(this, 'handleCommentCode', EventType.CommentCodeClicked);
   }
 
   ngAfterViewInit(): void {
@@ -190,5 +195,27 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
 
   private handleCommentCode() {
     this.editor.toggleCommentLines();
+  }
+
+  private handleSaveQuery() {
+    if (!this.active) {
+      return;
+    }
+    if (!this.savedPath) {
+      let filepath = this.electronService.ipcRenderer.sendSync("openSaveFileDialog");
+      if (filepath) {
+        this.savedPath = filepath;
+        this.fileService.writeFile(this.savedPath, this.text);
+      }
+    }
+    else {
+      this.fileService.writeFile(this.savedPath, this.text);
+    }
+  }
+
+  private handleTextInput(t: string) {
+    if (this.active) {
+      this.text = t;
+    }
   }
 }
