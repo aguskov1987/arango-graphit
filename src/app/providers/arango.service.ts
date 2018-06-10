@@ -4,6 +4,7 @@ import { StoreUtils } from "../common/store";
 import { Observable } from "rxjs/Observable";
 import { Http, Headers, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/of';
 
 interface ITrack {
   dbId: string;
@@ -131,6 +132,11 @@ export class ArangoService {
       + "/_api/replication/logger-follow?from=" + track.lastTick;
     return this.http.get(address, {headers: this.headers}).map((response: Response) => {
       let changes = response.text().split('\n');
+
+      if (!changes) {
+        return Observable.of([]);
+      }
+
       let body: string = '{"rows": [';
       for (let change of changes) {
         body = body + change + ",";

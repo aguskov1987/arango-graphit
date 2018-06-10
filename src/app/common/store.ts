@@ -1,6 +1,5 @@
 import { ArangoDb } from "./types/arango_database.type";
 import { ArangoGraph } from "./types/arango_graph.type";
-import { Event } from "typescript.events";
 import { LabelMapping } from "app/common/types/label_mapping.type";
 
 export enum AppState {

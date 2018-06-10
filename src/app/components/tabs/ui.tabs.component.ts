@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChildren, NgZone } from "@angular/core";
+import { Component, Input, OnInit, QueryList, ViewChildren, NgZone, isDevMode } from "@angular/core";
 import * as fs from 'fs';
 import { TabType, TabComponent } from "./ui.tab.component";
 import { TabContentComponent } from "./ui.tabContent.component";
@@ -119,6 +119,11 @@ export class TabsComponent implements OnInit {
         }
       }
     });
+
+    if (isDevMode) {
+      console.log('current database', StoreUtils.currentDatabase);
+      console.log('current graph', StoreUtils.currentGraph);
+    }
   }
 
   public tabCloseClicked(id: number) {
@@ -156,7 +161,7 @@ export class TabsComponent implements OnInit {
       this.fileService.readFile(filename[0], (error, data) => {
         this.addNewTab(TabType.GraphAQL, "", "")
         window.setTimeout(() => {
-          EventHub.emit(new Event(EventType.AqlPopulation, data.toString()))
+          EventHub.emit(new Event(EventType.AqlPopulation, {text: data.toString(), path: filename}))
         }, 500);
       })
     }

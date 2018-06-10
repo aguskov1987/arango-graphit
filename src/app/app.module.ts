@@ -25,6 +25,7 @@ import { AppComponent } from './app.component';
 import { ElectronService } from './providers/electron.service';
 import { GraphObjExplorerComponent } from 'app/components/graph_object_explorer/graph_obj_explorer.component';
 import { LabelMappingsComponent } from 'app/components/app_settings/ui.label_mappings.component';
+import { TestComponent } from './components/test_component.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { LabelMappingsComponent } from 'app/components/app_settings/ui.label_map
     TabsComponent,
     GraphObjExplorerComponent,
     CodeHinterComponent,
-    LabelMappingsComponent
+    LabelMappingsComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,

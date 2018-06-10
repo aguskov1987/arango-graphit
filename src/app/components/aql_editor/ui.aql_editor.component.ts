@@ -103,7 +103,7 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
     editor.focus();
   }
 
-  public onTextChanged() {
+  public onTextChanged(event: any) {
     if (isDevMode) {
       console.log("onTextChanged triggered");
     }
@@ -205,17 +205,18 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
       let filepath = this.electronService.ipcRenderer.sendSync("openSaveFileDialog");
       if (filepath) {
         this.savedPath = filepath;
-        this.fileService.writeFile(this.savedPath, this.text);
+        this.fileService.writeFile(this.savedPath, this.text, (error) => {});
       }
     }
     else {
-      this.fileService.writeFile(this.savedPath, this.text);
+      this.fileService.writeFile(this.savedPath, this.text,  (error) => {});
     }
   }
 
-  private handleTextInput(t: string) {
+  private handleTextInput(data: any) {
     if (this.active) {
-      this.text = t;
+      this.text = data.text;
+      this.savedPath = data.path;
     }
   }
 }

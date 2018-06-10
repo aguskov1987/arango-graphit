@@ -50,3 +50,10 @@
     -webkit-user-select: none;
     background-color: #767773;
   }
+
+  .tracking-indicator {
+    width: 100%;
+    height: 5px;
+    background-color: red;
+    filter: blur(2px);
+  }

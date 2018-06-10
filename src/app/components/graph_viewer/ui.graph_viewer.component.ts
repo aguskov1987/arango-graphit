@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, Input } from "@angular/core";
+import { Component, OnInit, Input, isDevMode } from "@angular/core";
 import { ArangoService, IDbChange } from "../../providers/arango.service";
 import * as chroma from "chroma-js";
 import { StoreUtils } from "app/common/store";
@@ -17,7 +17,6 @@ export class GraphViewerComponent implements OnInit {
   private arangoServer: ArangoService;
   private data: any;
   private cytoscapeContext: any;
-  private tracking: boolean = false;
   private dbChanges: IDbChange[] = [];
   private rootId: string;
   private dir: string;
@@ -26,13 +25,14 @@ export class GraphViewerComponent implements OnInit {
 
   public previewPosition: [string, string] = ["-600px", "-600px"];
   public previewObject: any = {};
+  public tracking: boolean = false;
 
   constructor(aService: ArangoService) {
     this.arangoServer = aService;
     this.patcher = new DiffPatcher();
 
     EventHub.subscribe(this, 'handleStartTracking', EventType.StartTrackingGraph);
-    EventHub.subscribe(this, 'handleEndTracking', EventType.StartTrackingGraph);
+    EventHub.subscribe(this, 'handleEndTracking', EventType.EndTrackingGraph);
   }
 
   public ngOnInit() {
@@ -194,7 +194,9 @@ export class GraphViewerComponent implements OnInit {
   }
 
   private updateGraph(tabId: number) {
-    console.log(StoreUtils.currentGraph);
+    if (isDevMode) {
+      console.log('Current graph', StoreUtils.currentGraph);
+    }
     this.arangoServer.stopTrackingGraph(tabId).subscribe((changes) => {
       if (changes == null || !changes.length || changes.length < 1) {
         return;
@@ -311,6 +313,7 @@ export class GraphViewerComponent implements OnInit {
   private handleStartTracking(event: any) {
     let args = event as any;
     if (this.id === args.id) {
+      this.tracking = true;
       this.arangoServer.startTrackingGraph(args.id);
     }
   }
@@ -318,6 +321,7 @@ export class GraphViewerComponent implements OnInit {
   private handleEndTracking(event: any) {
     let args = event as any;
     if (this.id === args.id) {
+      this.tracking = false;
       this.updateGraph(args.id);
     }
   }

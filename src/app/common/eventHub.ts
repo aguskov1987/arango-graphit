@@ -11,7 +11,9 @@ export enum EventType {
     SaveAllClicked = 7,
     OpenClicked = 8,
 
-    AqlPopulation = 9
+    AqlPopulation = 9,
+
+    DbOrGraphUpdatedInTabContennt = 10
 }
 export class Event {
     constructor(type: EventType, args: any = null) {

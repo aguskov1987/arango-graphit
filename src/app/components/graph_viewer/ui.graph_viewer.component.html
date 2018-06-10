@@ -1,3 +1,5 @@
+<div *ngIf="tracking" class="tracking-indicator"></div>
+
 <div class="cytoscape-container" [id]="'cytoscapeContainer' + id"></div>
 <div class="preview" [id]="'preview' + id" [ngStyle]="{'top': previewPosition[0], 'left': previewPosition[1]}">
 

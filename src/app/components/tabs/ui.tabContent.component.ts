@@ -4,6 +4,7 @@ import {SelectItem} from 'primeng/primeng';
 import { TabType } from "./ui.tab.component";
 import { AqlEditorComponent } from "app/components/aql_editor/ui.aql_editor.component";
 import { StoreUtils } from "../../common/store";
+import { EventHub, EventType, Event } from "../../common/eventHub";
 
 @Component({
   moduleId: module.id,
@@ -60,9 +61,11 @@ export class TabContentComponent implements OnInit, OnChanges {
   public onDbChange(db) {
     StoreUtils.currentDatabase = StoreUtils.databases.find((d) => d.name === db);
     this.graphs = StoreUtils.currentDatabase.graphs.map(g => {return {label: g.name, value: g.name}});
+    EventHub.emit(new Event(EventType.DbOrGraphUpdatedInTabContennt, {id: this.id, database: db, graph: this.graph}))
   }
 
   public onGraphChange(gr) {
     StoreUtils.currentGraph = StoreUtils.currentDatabase.graphs.find((g) => g.name === gr);
+    EventHub.emit(new Event(EventType.DbOrGraphUpdatedInTabContennt, {id: this.id, database: this.database, graph: gr}))
   }
 }

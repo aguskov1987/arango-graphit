@@ -24,6 +24,7 @@ class Option {
 export class CodeHinterComponent implements OnInit {
   public position : [string, string] = ["-500px", "-500px"];
   public optionsAvailable : boolean = false;
+  public options : Option[] = [];
   @Output() public optionSelected = new EventEmitter();
 
   private keywordOptions : Option[] = [];
@@ -31,7 +32,6 @@ export class CodeHinterComponent implements OnInit {
   private localVariableOptions : Option[] = [];
   private docCollectionOptions : Option[] = [];
   private relCollectionOptions : Option[] = [];
-  private options : Option[] = [];
 
   private active : boolean = false;
 
