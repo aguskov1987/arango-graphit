@@ -1,0 +1,65 @@
+{
+  "_from": "ng2-ace-editor@^0.3.1",
+  "_id": "ng2-ace-editor@0.3.7",
+  "_inBundle": false,
+  "_integrity": "sha512-ddsLikPgQBzxr7bPR2DyPntBaOnsggF/1jqfIkEGPD99bhJvagcEnKjM8UYkGJdAJJ8TiZeH+FgNyiSabMqxbA==",
+  "_location": "/ng2-ace-editor",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "ng2-ace-editor@^0.3.1",
+    "name": "ng2-ace-editor",
+    "escapedName": "ng2-ace-editor",
+    "rawSpec": "^0.3.1",
+    "saveSpec": null,
+    "fetchSpec": "^0.3.1"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ng2-ace-editor/-/ng2-ace-editor-0.3.7.tgz",
+  "_shasum": "f62af0beeee5c2791739c6b42519db74a1c1a6da",
+  "_spec": "ng2-ace-editor@^0.3.1",
+  "_where": "C:\\Users\\Andrey\\Documents\\Projects\\arango-graphit",
+  "author": {
+    "name": "François-Xavier Montigny",
+    "email": "fxaviermontigny@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/fxmontigny/ng2-ace-editor/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "ace-builds": "^1.2.9",
+    "brace": "^0.10.0"
+  },
+  "deprecated": false,
+  "description": "Ace editor integration with typescript for Angular.",
+  "homepage": "https://github.com/fxmontigny/ng2-ace-editor#readme",
+  "keywords": [
+    "angular5",
+    "angular cli",
+    "ace",
+    "brace",
+    "typescript",
+    "directive",
+    "component",
+    "editor",
+    "ng2-ace",
+    "angular2-ace"
+  ],
+  "license": "MIT",
+  "main": "bundles/ng2-ace-editor.umd.min.js",
+  "module": "index.js",
+  "name": "ng2-ace-editor",
+  "peerDependencies": {
+    "@angular/core": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fxmontigny/ng2-ace-editor.git"
+  },
+  "typings": "index.d.ts",
+  "version": "0.3.7"
+}
