@@ -5,34 +5,39 @@ import { CodeHinterComponent } from "../code_hinter/ui.code_hinter.component";
 import { ArangoService } from "../../providers/arango.service";
 import { EventHub, EventType } from '../../common/eventHub';
 import { ElectronService } from '../../providers/electron.service';
+import { QueryValidationResult } from '../../common/types/QueryValidationResult';
 
 @Component({
-    moduleId: module.id,
-    selector: "aql-editor",
-    templateUrl: "ui.aql_editor.component.html",
+  moduleId: module.id,
+  selector: "aql-editor",
+  templateUrl: "ui.aql_editor.component.html",
 })
 export class AqlEditorComponent implements OnInit, AfterViewInit {
   @Input() public id: number;
   @Input() public active: boolean = false;
   @Input() public text = "";
-  @ViewChild("editor") public editorComponent : AceEditorComponent;
-  @ViewChild("hinter") public codeHinter : CodeHinterComponent;
+  @ViewChild("editor") public editorComponent: AceEditorComponent;
+  @ViewChild("hinter") public codeHinter: CodeHinterComponent;
 
   public savedPath = "";
-  public queryResult : any[] = [];
-  public tabId : number;
+  public queryResult: any[] = [];
+  public tabId: number;
+  public queryError: string = "";
 
-  private currentToken : any = null;
-  private editor : any;
-  private hinterOn : boolean = false;
-  private hinterJustClicked : boolean = false;
+  private currentToken: any = null;
+  private editor: any;
+  private hinterOn: boolean = false;
+  private hinterJustClicked: boolean = false;
+  private queryValidationTimer: any;
+  private interval = 2000;
+  private prevErrorLine: number = -1;
 
-  private renderer : Renderer2;
-  private arangoService : ArangoService;
+  private renderer: Renderer2;
+  private arangoService: ArangoService;
   private electronService: ElectronService;
   private fileService = fs;
 
-  constructor(r : Renderer2, as : ArangoService, es: ElectronService) {
+  constructor(r: Renderer2, as: ArangoService, es: ElectronService) {
     this.renderer = r;
     this.arangoService = as;
     this.electronService = es;
@@ -43,8 +48,8 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
     EventHub.subscribe(this, 'handleSaveQuery', EventType.SaveClicked);
   }
 
-  public ngOnInit() : void {
-    this.editorComponent.setOptions({fontSize: "12pt"});
+  public ngOnInit(): void {
+    this.editorComponent.setOptions({ fontSize: "12pt" });
     this.editor = this.editorComponent.getEditor();
     this.editor.getSelection().on("changeCursor", () => {
       this.codeHinter.hideHinter();
@@ -54,10 +59,10 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     let Split = require("split.js");
-    Split(["#aqlCodeEditor" + this.id, "#aqlResultPanel" + this.id], {direction : "vertical", sizes: [50, 50]});
+    Split(["#aqlCodeEditor" + this.id, "#aqlResultPanel" + this.id], { direction: "vertical", sizes: [50, 50] });
   }
 
-  public captureCursorPosition() : [string, string] {
+  public captureCursorPosition(): [string, string] {
     let bodyRect = document.body.getBoundingClientRect();
     let cursor = document.getElementById("aqlCodeEditor" + this.id).getElementsByClassName("ace_cursor")[0];
 
@@ -73,27 +78,27 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
     this.hinterOn = true;
 
     this.editor.commands.addCommand({
-      name : "down_arrow",
-      exec : () => { this.codeHinter.goUpDown("down"); },
-      bindKey : {win: "Down"},
+      name: "down_arrow",
+      exec: () => { this.codeHinter.goUpDown("down"); },
+      bindKey: { win: "Down" },
     });
     this.editor.commands.addCommand({
-      name : "up_arrow",
-      exec : () => { this.codeHinter.goUpDown("up"); },
-      bindKey : {win: "Up"},
+      name: "up_arrow",
+      exec: () => { this.codeHinter.goUpDown("up"); },
+      bindKey: { win: "Up" },
     });
     this.editor.commands.addCommand({
-      name : "enter-press",
-      exec : () => { this.codeHinter.onOptionClick(); },
-      bindKey : {win : "Enter"},
+      name: "enter-press",
+      exec: () => { this.codeHinter.onOptionClick(); },
+      bindKey: { win: "Enter" },
     });
     this.editor.commands.addCommand({
-      name : "esc-press",
-      exec : () => {
+      name: "esc-press",
+      exec: () => {
         this.codeHinter.hideHinter();
         this.clearBindings();
-        },
-      bindKey : {win : "Esc"},
+      },
+      bindKey: { win: "Esc" },
     });
     if (isDevMode()) {
       console.log("code hinter bindings added");
@@ -104,6 +109,9 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
   }
 
   public onTextChanged(event: any) {
+    clearTimeout(this.queryValidationTimer);
+    this.queryValidationTimer = setTimeout(() => {this.ValidateQuery()}, this.interval);
+
     if (isDevMode) {
       console.log("onTextChanged triggered");
     }
@@ -118,9 +126,9 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
     if (token !== null && token.value !== "" && token.value !== " "
       && token.value !== "{" && token.value !== "}" && token.value !== "("
       && token.value !== ")" && token.value !== "[" && token.value !== "]") {
-        if (isDevMode) {
-          console.log("current aql editor token - " + token.value);
-        }
+      if (isDevMode) {
+        console.log("current aql editor token - " + token.value);
+      }
       this.codeHinter.updateOptionsList(token.value);
       if (this.codeHinter.optionsAvailable && !this.codeHinter.isOneOptionAndSameAsToken(token.value)) {
         this.showHinter();
@@ -135,7 +143,7 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public hinterOptionSelected(word : string) {
+  public hinterOptionSelected(word: string) {
     this.hinterJustClicked = true;
     if (isDevMode) {
       console.log("hinter option selected");
@@ -151,7 +159,7 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
   }
 
   @HostListener("keyup", ["$event"])
-  public handleKeyboardEvent(kbdEvent : KeyboardEvent) {
+  public handleKeyboardEvent(kbdEvent: KeyboardEvent) {
     if (kbdEvent.code === "F5") {
       this.arangoService.executeAqlQuery(this.text).then((cursor) => {
         cursor.all().then((items) => {
@@ -205,11 +213,11 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
       let filepath = this.electronService.ipcRenderer.sendSync("openSaveFileDialog");
       if (filepath) {
         this.savedPath = filepath;
-        this.fileService.writeFile(this.savedPath, this.text, (error) => {});
+        this.fileService.writeFile(this.savedPath, this.text, (error) => { });
       }
     }
     else {
-      this.fileService.writeFile(this.savedPath, this.text,  (error) => {});
+      this.fileService.writeFile(this.savedPath, this.text, (error) => { });
     }
   }
 
@@ -218,5 +226,33 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
       this.text = data.text;
       this.savedPath = data.path;
     }
+  }
+
+  private ValidateQuery() {
+    let normalColor = "#8F908A";
+    let errorColor = "red";
+    let gutterCells = document.getElementsByClassName("ace_gutter-cell");
+    if (this.prevErrorLine !== -1) {
+      let div = gutterCells[this.prevErrorLine - 1] as HTMLDivElement;
+      div.style.color = normalColor;
+    }
+
+    this.arangoService.validateQuery(this.text).subscribe(
+      (validation) => {
+        this.queryError = "";
+      },
+      (error) => {
+        let body = JSON.parse(error._body);
+        this.queryError = body.errorMessage;
+        let validation = new QueryValidationResult(body.errorMessage);
+
+        let errorPosition = validation.getErrorPosition();
+        if (errorPosition[1] != null) {
+          this.prevErrorLine = errorPosition[1];
+        
+          let div = gutterCells[errorPosition[1] - 1] as HTMLDivElement;
+          div.style.color = errorColor;
+        }
+      });
   }
 }

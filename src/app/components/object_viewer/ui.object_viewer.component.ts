@@ -16,6 +16,7 @@ interface Item {
 })
 export class ObjectViewerComponent implements OnInit, OnChanges {
   @Input() public json: any[] | Object | any;
+  @Input() public queryError: string = "";
 
   @Input()
   get expanded(): boolean {

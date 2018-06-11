@@ -1,3 +1,5 @@
+<div class="queryError">{{queryError}}</div>
+
 <div class="item"
   *ngFor="let item of asset;"
   [ngClass]="['item__type--' + item.type, 'is-object-' + isObject(item), 'is-opened-' + item.isOpened]">

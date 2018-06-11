@@ -8,7 +8,7 @@
     </ace-editor>
   </div>
   <div [id]="'aqlResultPanel' + id" style="overflow: auto;">
-    <object-viewer [json]="queryResult"></object-viewer> 
+    <object-viewer [json]="queryResult" [queryError]="queryError"></object-viewer> 
   </div>
 
 <code-hinter #hinter (optionSelected)="hinterOptionSelected($event)"></code-hinter>

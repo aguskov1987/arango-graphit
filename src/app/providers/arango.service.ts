@@ -4,6 +4,7 @@ import { StoreUtils } from "../common/store";
 import { Observable } from "rxjs/Observable";
 import { Http, Headers, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
 
 interface ITrack {
@@ -105,20 +106,6 @@ export class ArangoService {
     })
   }
 
-  public tabClosed(tabId: number) {
-    let newTabs: { [tab: number]: ITrack } = {};
-    for (let tab in this.tabTicks) {
-      let id = parseInt(tab);
-      if (id < tabId) {
-        newTabs[id] = this.tabTicks[id];
-      }
-      else if (id > tabId) {
-        newTabs[id - 1] = this.tabTicks[id];
-      }
-    }
-    this.tabTicks = newTabs;
-  }
-
   public stopTrackingGraph(tabId: number): Observable<IDbChange[]> {
     // type 2300 -> document/relation modification, new document/relation
     // type 2302 -> remove document/relation
@@ -149,6 +136,28 @@ export class ArangoService {
       let json = JSON.parse(body);
       return json.rows;
     })
+  }
+
+  public tabClosed(tabId: number) {
+    let newTabs: { [tab: number]: ITrack } = {};
+    for (let tab in this.tabTicks) {
+      let id = parseInt(tab);
+      if (id < tabId) {
+        newTabs[id] = this.tabTicks[id];
+      }
+      else if (id > tabId) {
+        newTabs[id - 1] = this.tabTicks[id];
+      }
+    }
+    this.tabTicks = newTabs;
+  }
+
+  public validateQuery(query: string): Observable<any> {
+    let address = "http://localhost:8529/_api/query";
+    let test = `{"query": "${query}"}`;
+    return this.http.post(address, test, {headers: this.headers}).map((response: any) => {
+      return response;
+    });
   }
 
   private buildFilter(ids: string[], forWhat: string): string {
