@@ -153,8 +153,10 @@ export class ArangoService {
   }
 
   public validateQuery(query: string): Observable<any> {
+    let parts = query.split("\n");
+    let joined = parts.join("\\n ");
     let address = "http://localhost:8529/_api/query";
-    let test = `{"query": "${query}"}`;
+    let test = `{"query": "${joined}"}`;
     return this.http.post(address, test, {headers: this.headers}).map((response: any) => {
       return response;
     });
