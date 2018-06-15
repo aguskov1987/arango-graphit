@@ -13,7 +13,8 @@ export enum EventType {
 
     AqlPopulation = 9,
 
-    DbOrGraphUpdatedInTabContennt = 10
+    DbOrGraphUpdatedInTabContennt = 10,
+    GraphTrackingUpdated = 11
 }
 export class Event {
     constructor(type: EventType, args: any = null) {

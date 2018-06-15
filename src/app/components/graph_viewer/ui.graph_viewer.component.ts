@@ -3,7 +3,7 @@ import { ArangoService, IDbChange } from "../../providers/arango.service";
 import * as chroma from "chroma-js";
 import { StoreUtils } from "app/common/store";
 import { DiffPatcher } from "jsondiffpatch";
-import { EventHub, EventType } from "../../common/eventHub";
+import { EventHub, EventType, Event } from "../../common/eventHub";
 
 @Component({
   moduleId: module.id,
@@ -147,6 +147,9 @@ export class GraphViewerComponent implements OnInit {
 
           this.cytoscapeContext.on("unselect", (event) => {
             this.previewPosition = ["-600px", "-600px"];
+            if (this.previewObject != null && this.previewObject.changesVisible) {
+              this.previewObject.changesVisible = false;
+            }
           });
         });
       });
@@ -254,7 +257,8 @@ export class GraphViewerComponent implements OnInit {
           }
         });
 
-        relsCursor.all().then((rels) => {
+        relsCursor.all().then((relsContaner) => {
+          let rels = relsContaner[0];
           rels.forEach((rel) => {
             if (rel != null) {
               let link = {
@@ -323,6 +327,7 @@ export class GraphViewerComponent implements OnInit {
     if (this.id === args.id) {
       this.tracking = false;
       this.updateGraph(args.id);
+      EventHub.emit(new Event(EventType.GraphTrackingUpdated, {id: this.id}));
     }
   }
 }

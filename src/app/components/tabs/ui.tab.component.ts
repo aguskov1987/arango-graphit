@@ -1,6 +1,5 @@
 // Too simple to test
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { StoreUtils } from "app/common/store";
 import { EventHub, EventType } from "../../common/eventHub";
 
 export enum TabType {
@@ -33,6 +32,7 @@ export class TabComponent implements OnInit {
 
   constructor() {
     EventHub.subscribe(this, 'handleUpdateDbAndGraph', EventType.DbOrGraphUpdatedInTabContennt);
+    EventHub.subscribe(this, 'handleGraphTrackingUpdate', EventType.GraphTrackingUpdated);
   }
 
   public ngOnInit() {
@@ -50,6 +50,12 @@ export class TabComponent implements OnInit {
     if (event.id === this.id) {
       this.database = event.database;
       this.graph = event.graph;
+    }
+  }
+
+  private handleGraphTrackingUpdate(args: any) {
+    if (args.id === this.id) {
+      this.tabClicked();
     }
   }
 }

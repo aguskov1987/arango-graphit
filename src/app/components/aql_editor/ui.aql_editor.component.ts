@@ -29,7 +29,7 @@ export class AqlEditorComponent implements OnInit, AfterViewInit {
   private hinterOn: boolean = false;
   private hinterJustClicked: boolean = false;
   private queryValidationTimer: any;
-  private interval = 2000;
+  private interval = 1000;
   private prevErrorLine: number = -1;
 
   private renderer: Renderer2;
